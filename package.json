@@ -1,0 +1,16 @@
+{
+  "name": "lync-chat-client",
+  "version": "1.0.0",
+  "description": "chat application client",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Welcome to the Lync community!\"",
+    "start": "node app.js"
+  },
+  "author": "Justin Harry Anyika",
+  "license": "ISC",
+  "dependencies": {
+    "ejs": "^3.1.8",
+    "express": "^4.18.2"
+  }
+}
