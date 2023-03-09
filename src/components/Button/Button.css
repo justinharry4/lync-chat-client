@@ -1,0 +1,5 @@
+button {
+    border-radius: 4px;
+    background-color: var(--lyncblue);
+    padding: .5em;
+}

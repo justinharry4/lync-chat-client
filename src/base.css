@@ -1,0 +1,56 @@
+@charset "utf-8";
+
+/* variables */
+:root {
+    --lyncblue: #405cfa;
+}
+
+/* box-sizing */
+:root {
+    box-sizing: border-box;
+}
+* {
+    box-sizing: inherit;
+}
+
+/* neutral styles */
+h1, h2, h3, h4, h5, p, ul,
+button, input, fieldset, body {
+    margin: 0;
+    padding: 0;
+}
+button, input, fieldset {
+    border: none;
+    border-radius: 0px;
+    font-size: inherit;
+}
+button {
+    background-color: transparent;
+    color: inherit;
+}
+input:focus, select:focus {
+    outline: none;
+}
+li {
+    list-style: none;
+}
+a {
+    text-decoration: none;
+    color: inherit;
+}
+table, thead, tbody,
+tfoot, tr, th, td {
+    display: block;
+}
+th, td {
+    padding: 0px;
+}
+hr {
+    margin: 0em;
+    border: 1px solid #fff;
+}
+
+/* main styles */
+body {
+    font-family: sans-serif;
+}
