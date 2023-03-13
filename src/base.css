@@ -3,6 +3,7 @@
 /* variables */
 :root {
     --lyncblue: #405cfa;
+    --darkmode-black: #141414;
 }
 
 /* box-sizing */
@@ -53,4 +54,5 @@ hr {
 /* main styles */
 body {
     font-family: sans-serif;
+    background-color: var(--darkmode-black);
 }

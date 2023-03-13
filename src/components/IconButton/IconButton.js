@@ -19,7 +19,8 @@ class IconButton extends Component {
     view(){
         return `
             <Component-lc lc--Button:btn--cl class="iconbtn">
-                <img src="lt--iconLink--tl">
+                <Svg-ls ls--lt--iconLink--tl--sl>
+                </Svg-ls>
             </Component-lc>
         `
     }

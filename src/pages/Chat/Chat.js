@@ -1,5 +1,6 @@
 import Button from "../../components/Button/Button.js";
 import IconButton from "../../components/IconButton/IconButton.js";
+import Navigation from "../../components/Navigation/Navigation.js";
 
 class Chat {
     view(){
@@ -9,18 +10,9 @@ class Chat {
 
 export default Chat;
 
-let btn = new Button({
-    labelText: 'first button',
-    onClick: () => {console.log('First Button clicked!!!')},
-});
 
-let ibtn = new IconButton({
-    iconLink: '/favicon.ico',
-    onClick: () => {console.log('Icon Button Clicked!!!')}
-});
+let nav = new Navigation({});
+let $nav = await nav.render();
 
-let $btn = btn.render();
-let $ibtn = ibtn.render();
-
-$('#root').append($btn);
-$('#root').append($ibtn);
+// console.log($nav.get(0));
+$('#root').append($nav);

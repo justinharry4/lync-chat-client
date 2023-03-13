@@ -1,0 +1,7 @@
+.iconbtn svg {
+    width: 1.5em;
+}
+
+.iconbtn:hover, .iconbtn:active {
+    background-color: var(--lyncblue);
+}

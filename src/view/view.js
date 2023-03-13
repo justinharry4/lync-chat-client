@@ -1,3 +1,6 @@
+import { get, post } from '../utils/utils.js';
+
+
 function insertDynamicText(rawTemplateStr, context){
     let varStartSeq = 'lt--';
     let varEndSeq = '--tl';
@@ -9,9 +12,12 @@ function insertDynamicText(rawTemplateStr, context){
     let breakRe = new RegExp(breakSeq, 'g');
 
     let matches = templateStr.match(templateVarRe);
-    let templateVars = matches.map((matchStr) => {
-        return matchStr.replace(varStartSeq, '').replace(varEndSeq, '');
-    });
+    let templateVars = []
+        .concat(matches)
+        .filter((value) => value)
+        .map((matchStr) => {
+            return matchStr.replace(varStartSeq, '').replace(varEndSeq, '');
+        });
     templateVars = [...(new Set(templateVars))];
 
     let varMap = {};
@@ -91,7 +97,7 @@ function addComponentAttributes(rawTemplateStr){
     let dataAttr = 'lc';
     
     let componentTagRe = RegExp('Component-lc', 'g');
-    let templateStr = rawTemplateStr.replace(componentTagRe, 'div')
+    let templateStr = rawTemplateStr.replace(componentTagRe, 'div');
     
     return addDataAttributes(
         templateStr,
@@ -101,16 +107,62 @@ function addComponentAttributes(rawTemplateStr){
     );
 }
 
-function addEventListeners(templateStr, context){
-    let $element = $(templateStr);
+function addSvgSourceAttributes(rawTemplateStr){
+    let svgStartSeq = 'ls--';
+    let svgEndSeq = '--sl';
+    let dataAttr = 'ls';
 
+    let svgTagRe= new RegExp('Svg-ls', 'g');
+    let templateStr = rawTemplateStr.replace(svgTagRe, 'svg');
+
+    return addDataAttributes(
+        templateStr,
+        svgStartSeq,
+        svgEndSeq,
+        dataAttr
+    );
+}
+
+async function renderSvg(templateStr){
+    let $element = $(templateStr);
+    let $container = $('<div>');
+    $container.append($element);
+
+    let $svgElements = $container.find('svg[data-ls]');
+    for (let svgEl of $svgElements){
+        let $svgEl = $(svgEl);
+
+        let idAttr = $svgEl.attr('id');
+        let classAttr = $svgEl.attr('class');
+        let lfMarker = $svgEl.data('lf');
+        let src = $svgEl.data('ls');
+        
+        try {
+            let { resData } = await get(src);
+            let $trueSvg = $(resData).find('svg');
+
+            $trueSvg
+                .addClass(classAttr)
+                .attr('id', idAttr)
+                .attr('data-lf', lfMarker);
+
+            $svgEl.replaceWith($trueSvg);
+        } catch ({ jqXHR }){
+            console.log("Request to '" + src + "' Failed!");
+        }
+    }
+
+    return $container.children();
+}
+
+function addEventListeners($element, context){
     function attachListeners(el){
         let $el = $(el);
         let lfMarker = $el.data('lf');
 
         if (lfMarker){
             let [ event, fnName ] = lfMarker.split(':');
-            
+
             if ((typeof context[fnName]) !== 'function' ){
                 throw new Error('invalid lf marker ' + lfMarker + ' on ' + el);
             }
@@ -129,7 +181,7 @@ function addEventListeners(templateStr, context){
     return $element;
 }
 
-function renderSubComponents($element, component){
+async function renderSubComponents($element, component){
     let $container = $('<div>');
     $container.append($element);
 
@@ -137,7 +189,7 @@ function renderSubComponents($element, component){
     for (let subCmpDiv of $subCmpDivs){
         let childNodes = subCmpDiv.childNodes;
 
-        let $subCmpDiv =$(subCmpDiv);
+        let $subCmpDiv = $(subCmpDiv);
         let idAttr = $subCmpDiv.attr('id');
         let classAttr = $subCmpDiv.attr('class');
 
@@ -147,7 +199,7 @@ function renderSubComponents($element, component){
         let ctx = component.childContexts[ctxName];
 
         let cmp = new cmpClass(ctx);
-        let $cmpEl = cmp.render();
+        let $cmpEl = await cmp.render();
 
         $cmpEl.attr('id', idAttr).addClass(classAttr);
         $cmpEl.append(childNodes);
@@ -158,22 +210,6 @@ function renderSubComponents($element, component){
 
     return $fullElement;
 }
-
-// let t = `
-//     <button type="button" lf--click:onClick--fl>
-//         labelText
-//     <div lf--blur:blurFn--fl>a random div</div><span lf--Download:showNotification--fl>some text</span>
-//     </button>
-// `
-// let ctx = {
-//     onClick: () => {console.log('clickety!')},
-//     blurFn: () => {console.log('blurred out!')},
-//     showNotification: () => {console.log('notified!')}
-// }
-
-// let a = addHandlerAttributes(t)
-// addEventListeners(a, ctx);
-
 
 function renderRoot(page){
     let el = page.view();
@@ -186,6 +222,8 @@ let view = {
     insertDynamicText,
     addComponentAttributes,
     addHandlerAttributes,
+    addSvgSourceAttributes,
+    renderSvg,
     addEventListeners,
     renderSubComponents,
 };

@@ -17,3 +17,30 @@ function trim(str){
 
     return trimmedLines.join('\n');
 }
+
+function genericAJAXRequest(method, url, data){
+    let promise = new Promise((resolve, reject) => {
+        let jqXHR = $[method](url, data);
+
+        jqXHR.done(resData => {
+            resolve({ jqXHR, resData })
+        });
+        jqXHR.fail(() => {
+            reject({ jqXHR });
+        });
+    });
+    
+    return promise;
+}
+
+async function get(url, data){
+    let result =  await genericAJAXRequest('get', url, data);
+    return result;
+}
+
+async function post(url, data){   
+    let result = await genericAJAXRequest('post', url, data);
+    return result;
+}
+
+export { get, post }
