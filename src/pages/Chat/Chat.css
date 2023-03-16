@@ -1,4 +1,12 @@
-#chat-container {
-    text-align: center;
-    font-size: 3em;
+#chat-root {
+    display: flex;
+    align-items: stretch;
+}
+
+#msg-section {
+    flex: 0 0 20em;
+}
+
+#side-nav {
+    flex: 0 0 min-content;
 }

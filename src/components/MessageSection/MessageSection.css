@@ -1,0 +1,17 @@
+#msg-section {
+    border: solid 1px blue;
+    padding: .7em 1.7em;
+    color: #fff;
+}
+
+#msg-section .searchbox {
+    margin: 1.3em 0em 2em;
+}
+
+#msg-section__all-msgs h2 {
+    font-size: .75em;
+    font-weight: normal;
+    color: var(--lynclightgrey);
+    margin-bottom: .8em;
+}
+

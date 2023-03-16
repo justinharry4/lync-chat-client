@@ -2,7 +2,6 @@
 
 #side-nav {
     border: 1px solid red;
-    width: min-content;
 }
 
 #side-nav ul {
@@ -21,4 +20,16 @@
 
 #side-nav .iconbtn img {
     width: 30px;
+}
+
+#side-nav__chat svg path {
+    stroke: var(--lynclightgrey);
+}
+
+#side-nav__settings svg path:first-child {
+    fill: var(--lynclightgrey);
+}
+
+#side-nav__settings svg path:last-child {
+    stroke: var(--lynclightgrey);
 }

@@ -1,4 +1,3 @@
-import view from '../view/view.js';
 import Chat from '../pages/Chat/Chat.js';
 import Error404 from '../pages/Error404/Error404.js';
 
@@ -16,24 +15,25 @@ const urlMap = {
 urlMap[error404Url] = Error404;
 
 function getPage(url){
-    let page, redirected, notFound;
+    let pageClass, redirected, notFound;
+
     if (Object.keys(urlMap).includes(url)){
-        page = urlMap[url];
+        pageClass = urlMap[url];
     } else {
         if (redirectInvalidUrls){
-            page = urlMap[defaultUrl];
+            pageClass = urlMap[defaultUrl];
             redirected = true;
         } else {
-            page = urlMap[error404Url];
+            pageClass = urlMap[error404Url];
             notFound = true;
         }
     }
 
-    return { page, redirected, notFound };
+    return { pageClass, redirected, notFound };
 }
 
 function renderPage(url){
-    let {page, redirected, notFound } = getPage(url);
+    let { pageClass, redirected, notFound } = getPage(url);
 
     if (redirected) {
         history.replaceState(null, null, defaultUrl);
@@ -41,7 +41,8 @@ function renderPage(url){
         history.replaceState(null, null, error404Url);
     }
     
-    view.renderRoot(new page());
+    let page = new pageClass();
+    page.renderPage();
 }
 
 let router = { renderPage };

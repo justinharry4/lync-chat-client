@@ -1,0 +1,22 @@
+.searchbox {
+    display: flex;
+    padding: 1em;
+    border-radius: 6px;
+    background-color: #000;
+    font-size: .8em;
+}
+
+.searchbox svg {
+    width: 17px;
+    color: var(--lynclightgrey);
+}
+
+.searchbox form {
+    margin-left: .5em;
+}
+
+.searchbox input {
+    height: 100%;
+    color: var(--lynclightgrey);
+    background-color: transparent;
+}

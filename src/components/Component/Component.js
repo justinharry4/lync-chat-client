@@ -5,8 +5,27 @@ class Component {
         this.ctx = context;
     }
 
+    iterStr(iterable, fn, mode='o'){
+        // modes: o => for of, i => for in, e => for each
+        let templateStr = '';
+
+        if (mode === 'o'){
+            for (let entry of iterable){
+                templateStr += fn(entry, iterable) + '\n';
+            }
+        }
+
+        return templateStr;
+    }
+
+    viewPromise(){
+        return new Promise((resolve, reject) => {
+            resolve(this.view());
+        });
+    }
+
     async render(){
-        let rawViewStr = this.view();
+        let rawViewStr = await this.viewPromise();
     
         let ltResolvedViewStr = view.insertDynamicText(rawViewStr, this.ctx);
         
@@ -17,8 +36,10 @@ class Component {
         let $componentWithSvg = await view.renderSvg(lfAttrViewStr);
         let $lightComponent = view.addEventListeners($componentWithSvg, this.ctx);
         let $fullComponent = view.renderSubComponents($lightComponent, this);
-    
-        return $fullComponent;
+        
+        this.$element = $fullComponent;
+
+        return this.$element;
     }
 }
 

@@ -1,18 +1,29 @@
-import Button from "../../components/Button/Button.js";
-import IconButton from "../../components/IconButton/IconButton.js";
+import Page from "../Page/Page.js";
 import Navigation from "../../components/Navigation/Navigation.js";
+import MessageSection from "../../components/MessageSection/MessageSection.js";
 
-class Chat {
+class Chat extends Page {
+    constructor(context){
+        super(context);
+
+        this.childComponents = { 
+            Navigation,
+            MessageSection,
+        };
+        this.childContexts = {
+            nav: {},
+            msgSection: {}
+        }
+    }
+
     view(){
-        return '<div id="chat-container">This is the chat home page</div>'
+        return  `
+            <div id="chat-root">
+                <Component-lc lc--Navigation:nav--cl></Component-lc>
+                <Component-lc lc--MessageSection:msgSection--cl></Component-lc>
+            </div>
+        `
     }
 }
 
 export default Chat;
-
-
-let nav = new Navigation({});
-let $nav = await nav.render();
-
-// console.log($nav.get(0));
-$('#root').append($nav);
