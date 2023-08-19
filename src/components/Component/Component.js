@@ -1,4 +1,4 @@
-import view from "../../view/view.js";
+import View from "../../view/view.js";
 
 class Component {
     constructor(context){
@@ -64,16 +64,19 @@ class Component {
     async render(){
         await this.generateChildContexts();
         
-        let rawViewStr = await this.viewPromise();
+        // let rawViewStr = await this.viewPromise();
 
-        let ltResolvedViewStr = view.insertDynamicText(rawViewStr, this.ctx);
-        let lsAttrViewStr = view.addSvgSourceAttributes(ltResolvedViewStr);
-        let lcAttrViewStr = view.addComponentAttributes(lsAttrViewStr);
-        let lfAttrViewStr = view.addHandlerAttributes(lcAttrViewStr);
+        // let ltResolvedViewStr = view.insertDynamicText(rawViewStr, this.ctx);
+        // let lsAttrViewStr = view.addSvgSourceAttributes(ltResolvedViewStr);
+        // let lcAttrViewStr = view.addComponentAttributes(lsAttrViewStr);
+        // let lfAttrViewStr = view.addHandlerAttributes(lcAttrViewStr);
         
-        let $componentWithSvg = await view.renderSvg(lfAttrViewStr);
-        let $lightComponent = view.addEventListeners($componentWithSvg, this.ctx);
-        let $fullComponent = await view.renderSubComponents($lightComponent, this);
+        // let $componentWithSvg = await view.renderSvg(lfAttrViewStr);
+        // let $lightComponent = view.addEventListeners($componentWithSvg, this.ctx);
+        // let $fullComponent = await view.renderSubComponents($lightComponent, this);
+
+        let view = new View(this);
+        let $fullComponent = await view.createElement();
         
         this.$element = $fullComponent;
 

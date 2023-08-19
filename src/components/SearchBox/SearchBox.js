@@ -2,6 +2,11 @@ import Component from '../Component/component.js';
 
 import './SearchBox.css';
 
+searchSvgURL = new URL(
+    '../../../public/images/svg/search-browse.svg',
+    import.meta.url
+)
+
 class SearchBox extends Component {
     baseCtx = {
         placeholder: null,
@@ -11,7 +16,7 @@ class SearchBox extends Component {
     view(){
         return `
             <div class="searchbox">
-                <Svg-ls ls--/images/svg/search-browse.svg--sl></Svg-ls>
+                <Svg-ls ls--${searchSvgURL}--sl></Svg-ls>
                 <form lf--submit:onSubmit--fl>
                     <input type="text" name="search" placeholder="lt--placeholder--tl">
                 </form>

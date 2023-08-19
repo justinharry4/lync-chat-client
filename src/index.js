@@ -1,4 +1,6 @@
-import router from "./routes/router.js";
+import Router from "./routes/router.js";
+
+let router = new Router();
 
 let url = location.pathname;
 
