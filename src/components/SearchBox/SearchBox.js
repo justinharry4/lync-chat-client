@@ -1,5 +1,6 @@
 import Component from '../Component/component.js';
 
+import './SearchBox.css';
 
 class SearchBox extends Component {
     baseCtx = {

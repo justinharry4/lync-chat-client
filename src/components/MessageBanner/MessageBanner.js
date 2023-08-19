@@ -1,5 +1,6 @@
 import Component from "../Component/component.js";
 
+import './MessageBanner.css';
 
 class MessageBanner extends Component {
     baseCtx = {

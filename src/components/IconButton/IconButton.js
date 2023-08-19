@@ -1,6 +1,8 @@
 import Component from "../Component/Component.js";
 import Button from "../Button/Button.js";
 
+import './IconButton.css';
+
 class IconButton extends Component {
     baseCtx = {
         iconLink: '',

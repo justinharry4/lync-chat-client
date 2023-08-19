@@ -3,6 +3,12 @@ import view from "../../view/view.js";
 class Component {
     constructor(context){
         this.ctx = context;
+        
+        let localContext;
+        if (this.localContext){
+            localContext = this.localContext();
+            this.ctx = {...this.ctx, ...localContext}
+        }
     }
 
     iterStr(iterable, fn, mode='o'){
@@ -35,7 +41,7 @@ class Component {
         
         let $componentWithSvg = await view.renderSvg(lfAttrViewStr);
         let $lightComponent = view.addEventListeners($componentWithSvg, this.ctx);
-        let $fullComponent = view.renderSubComponents($lightComponent, this);
+        let $fullComponent = await view.renderSubComponents($lightComponent, this);
         
         this.$element = $fullComponent;
 

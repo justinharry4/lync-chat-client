@@ -1,6 +1,19 @@
 import Component from "../Component/Component.js";
 import IconButton from "../IconButton/IconButton.js";
 
+import './Navigation.css';
+
+let chatIconURL = new URL(
+    '../../../public/images/svg/messages-icon.svg',
+    import.meta.url
+)
+
+let settingsIconURL = new URL(
+    '../../../public/images/svg/settings-icon.svg',
+    import.meta.url
+)
+
+
 class Navigation extends Component {    
     constructor(context){
         super(context);
@@ -8,11 +21,11 @@ class Navigation extends Component {
         this.childComponents = { IconButton };
         this.childContexts = {
             chat: {
-                iconLink: '/images/svg/messages-icon.svg',
+                iconLink: chatIconURL,
                 onClick: this.displayChats,
             },
             settings: {
-                iconLink: '/images/svg/settings-icon.svg',
+                iconLink: settingsIconURL,
                 onClick: this.displaySettings,
             }
         };

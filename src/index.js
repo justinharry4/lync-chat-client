@@ -1,5 +1,7 @@
-import router from "/routes/router.js";
+import router from "./routes/router.js";
 
-let url = $('#route').data('url');
+let url = location.pathname;
 
 router.renderPage(url);
+
+console.log('index_ran');

@@ -1,6 +1,9 @@
 import Page from "../Page/Page.js";
 import Navigation from "../../components/Navigation/Navigation.js";
 import MessageSection from "../../components/MessageSection/MessageSection.js";
+import PhotoUploader from "../../components/PhotoUploader/PhotoUploader.js";
+
+import './Chat.css';
 
 class Chat extends Page {
     constructor(context){
@@ -9,10 +12,12 @@ class Chat extends Page {
         this.childComponents = { 
             Navigation,
             MessageSection,
+            PhotoUploader,
         };
         this.childContexts = {
             nav: {},
-            msgSection: {}
+            msgSection: {},
+            uploader: {},
         }
     }
 
@@ -23,6 +28,7 @@ class Chat extends Page {
                 <Component-lc lc--MessageSection:msgSection--cl></Component-lc>
             </div>
         `
+        // <Component-lc lc--PhotoUploader:uploader--cl></Component-lc>
     }
 }
 

@@ -2,6 +2,7 @@
     display: flex;
     padding: .45em 0em;
     font-size: .9em;
+    cursor: pointer;
 }
 
 .msg-banner__photo {
