@@ -11,6 +11,8 @@ class Component {
         }
     }
 
+    async generateChildContexts(){}
+
     iterStr(iterable, fn, mode='o'){
         // modes: o => for of, i => for in, e => for each
         let templateStr = '';
@@ -24,6 +26,35 @@ class Component {
         return templateStr;
     }
 
+    autoSubCompIterStr(prefix, fn){
+        let iterable = this.getChildContextGroupNames(prefix);
+
+        return this.iterStr(iterable, fn);
+    }
+
+    addChildContextGroup(prefix, arr){
+        let contextGroup = {};
+        for (let [idx, entry] of arr.entries()){
+            let propName = prefix + '_' + idx;
+            contextGroup[propName] = entry;
+        }
+
+        this.childContexts = { ...this.childContexts, ...contextGroup };
+    }
+
+    getChildContextGroupNames(prefix){
+        let propNames = [];
+
+        for (let propName in this.childContexts){
+            let [frag1, frag2] = propName.split('_');
+            if (frag1 === prefix && !isNaN(frag2)){
+                propNames.push(propName);
+            }
+        }
+
+        return propNames;
+    }
+
     viewPromise(){
         return new Promise((resolve, reject) => {
             resolve(this.view());
@@ -31,10 +62,11 @@ class Component {
     }
 
     async render(){
-        let rawViewStr = await this.viewPromise();
-    
-        let ltResolvedViewStr = view.insertDynamicText(rawViewStr, this.ctx);
+        await this.generateChildContexts();
         
+        let rawViewStr = await this.viewPromise();
+
+        let ltResolvedViewStr = view.insertDynamicText(rawViewStr, this.ctx);
         let lsAttrViewStr = view.addSvgSourceAttributes(ltResolvedViewStr);
         let lcAttrViewStr = view.addComponentAttributes(lsAttrViewStr);
         let lfAttrViewStr = view.addHandlerAttributes(lcAttrViewStr);

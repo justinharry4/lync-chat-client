@@ -29,29 +29,36 @@ class MessageSection extends Component {
         console.log('search submitted!');
     }
 
+    async generateChildContexts(){
+        let msgdata = await this.getMessages();
+        
+        this.addChildContextGroup('ctc', msgdata);
+    }
+
     async getMessages(){
         let promise = new Promise((resolve, reject) => {
             let msgdata = [];
             for (let i=1; i<=10; i++){
                 msgdata.push({
-                    id: 'num' + i,
-                    ctx: {
-                        photoUrl: defaultPhotoURL,
-                        contactName: 'Will Hansen',
-                        msgTime: '02:06',
-                        message: 'Good morning to you all!',
-                        status: i,
-                    }
+                    // id: 'num' + i,
+                    // ctx: {
+                    photoUrl: defaultPhotoURL,
+                    contactName: 'Will Hansen',
+                    msgTime: '02:06',
+                    message: 'Good morning to you all!',
+                    status: i,
+                    // }
                 });
             }
             
-            this.contactIds = [];
-            for (let entry of msgdata){
-                this.childContexts[entry.id] = entry.ctx;
-                this.contactIds.push(entry.id);
-            }
+            // this.contactIds = [];
+            // for (let entry of msgdata){
+            //     this.childContexts[entry.id] = entry.ctx;
+            //     this.contactIds.push(entry.id);
+            // }
 
-            resolve(this.ctx);
+            // resolve(this.ctx);
+            resolve(msgdata);
         });
 
         return promise
@@ -69,15 +76,14 @@ class MessageSection extends Component {
                 <div id="msg-section__all-msgs">
                     <h2>All Messages</h2>
                     <ul>
-        ` +
-        this.iterStr(this.contactIds, (id) => {
+        ${this.autoSubCompIterStr('ctc', (ctxName) => { 
             return `
-                <li>
-                    <Component-lc lc--MessageBanner:${id}--cl></Component-lc>
-                </li>
+                        <li>
+                            <Component-lc lc--MessageBanner:${ctxName}--cl></Component-lc>
+                        </li>
             `
-        }) +
-        `         </ul>
+        })}
+                    </ul>
                 </div>
             </section>
         `
