@@ -1,14 +1,23 @@
 import View from "../../view/view.js";
 
 class Component {
-    constructor(context){
+    constructor(app, context){
+        this.app = app;
         this.ctx = context;
+        this.state = {};
         
-        let localContext;
-        if (this.localContext){
-            localContext = this.localContext();
-            this.ctx = {...this.ctx, ...localContext}
+        this.extendContext();
+    }
+
+    extendContext(){
+        let extension = {}
+        if (this.contextMethods){
+            for (let method of this.contextMethods()){
+                extension[method.name] = method.bind(this);
+            }
         }
+
+        this.ctx = {...this.ctx, ...extension};
     }
 
     async generateChildContexts(){}
@@ -53,6 +62,23 @@ class Component {
         }
 
         return propNames;
+    }
+
+    changeState(obj){
+        this.state = {...this.state, ...obj};
+        this.refresh();
+    }
+
+    async refresh(){
+        let $oldElement = this.$element;
+
+        let $newElement = await this.render();
+        // console.log('new', $newElement.parent());
+        // console.log('old', $oldElement);
+        // console.log('new', $newElement);
+        $oldElement.replaceWith($newElement);
+
+        // this.$element = $newElement;
     }
 
     viewPromise(){

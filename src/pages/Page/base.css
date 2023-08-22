@@ -56,4 +56,5 @@ hr {
 body {
     font-family: sans-serif;
     background-color: var(--darkmode-black);
+    color: #fff;
 }

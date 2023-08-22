@@ -4,9 +4,11 @@ import './base.css';
 
 class Page extends Component {
     async renderPage(){
+        let $root = $('#root');
         let $page = await this.render();
         
-        $('#root').append($page);
+        $root.children().remove();
+        $root.append($page);
     }
 }
 

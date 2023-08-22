@@ -11,8 +11,8 @@ let defaultPhotoURL = new URL(
 )
 
 class MessageSection extends Component {
-    constructor(context){
-        super(context);
+    constructor(...args){
+        super(...args);
 
         this.childComponents = { SearchBox, MessageBanner };
 

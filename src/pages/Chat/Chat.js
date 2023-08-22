@@ -6,8 +6,8 @@ import PhotoUploader from "../../components/PhotoUploader/PhotoUploader.js";
 import './Chat.css';
 
 class Chat extends Page {
-    constructor(context){
-        super(context);
+    constructor(...args){
+        super(...args);
 
         this.childComponents = { 
             Navigation,

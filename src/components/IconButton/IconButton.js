@@ -9,12 +9,16 @@ class IconButton extends Component {
         onClick: null,
     }
 
-    constructor(context){
-        super(context);
+    constructor(...args){
+        super(...args);
 
         this.childComponents = { Button };
         this.childContexts = {
-            btn: { labelText: '', onClick: this.ctx.onClick },
+            btn: {
+                type: 'button',
+                labelText: '',
+                onClick: this.ctx.onClick
+            },
         }
     }
 

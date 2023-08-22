@@ -4,13 +4,14 @@ import './Button.css';
 
 class Button extends Component {
     baseCtx = {
+        type: 'button',
         labelText: 'Button',
         onClick: null,
     }
 
     view(){
         return `
-            <button type="button" lf--click:onClick--fl>
+            <button type="lt--type--tl" lf--click:onClick--fl>
                 <span>lt--labelText--tl</span>
             </button>
         `

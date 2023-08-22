@@ -1,0 +1,54 @@
+@charset "utf-8";
+
+.dynamic-label {
+    --paleblue: rgb(39, 90, 158);
+    --errorred: #ad1f1f;
+}
+
+.dynamic-label {
+    /* border: 1px solid red; */
+    display: block;
+    position: relative;
+    color: #d3d3d3;
+}
+
+.dynamic-label input {
+    border-radius: 6px;
+    border-width: 2px;
+    border-color: #fff;
+    border-style: solid;
+    background-color: transparent;
+    display: inline-block;
+    width: 100%;
+    padding: .6em 1em;
+    color: #d3d3d3;
+}
+
+.dynamic-label.error input {
+    border-color: var(--errorred);
+}
+
+.dynamic-label input:focus {
+    border-color: var(--lyncblue);
+}
+
+.dynamic-label span {
+    position: absolute;
+    top: 25%;
+    left: 1em;
+    font-style: italic;
+    transition-property: 'color';
+    transition-duration: .3s;
+}
+
+.dynamic-label span.focus {
+    color: transparent;
+}
+
+.dynamic-label__error-text {
+    position: absolute;
+    top: 115%;
+    left: .5em;
+    color: var(--errorred);
+    font-size: .9em;
+}

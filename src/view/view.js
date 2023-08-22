@@ -401,14 +401,18 @@ class View {
             let lfMarker = $el.data('lf');
     
             if (lfMarker){
-                let [ event, fnName ] = lfMarker.split(':');
+                let lfPairs = lfMarker.split('|');
+
+                for (let lfPair of lfPairs){
+                    let [ event, fnName ] = lfPair.split(':');
     
-                if ((typeof context[fnName]) !== 'function' ){
-                    throw new Error('invalid lf marker ' + lfMarker + ' on ' + el);
+                    if ((typeof context[fnName]) !== 'function' ){
+                        throw new Error('invalid lf marker ' + lfMarker + ' on ', el);
+                    }
+        
+                    $el.on(event, context[fnName]);
+                    $el.removeAttr('data-lf');
                 }
-    
-                $el.on(event, context[fnName]);
-                $el.removeAttr('data-lf');
             }
     
             for (let childEl of $el.children()){
@@ -437,8 +441,9 @@ class View {
             let [className, ctxName] = lcMarker.split(':');
             let cmpClass = component.childComponents[className];
             let ctx = component.childContexts[ctxName];
-    
-            let cmp = new cmpClass(ctx);
+            let app = component.app;
+            
+            let cmp = new cmpClass(app, ctx);
             let $cmpEl = await cmp.render();
     
             $cmpEl.attr('id', idAttr).addClass(classAttr);

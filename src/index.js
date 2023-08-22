@@ -1,7 +1,7 @@
-import Router from "./routes/router.js";
+import App from "./app.js";
 
-let router = new Router();
+let app = new App();
 
 let url = location.pathname;
 
-router.renderPage(url);
+app.router.handleUrl(url);

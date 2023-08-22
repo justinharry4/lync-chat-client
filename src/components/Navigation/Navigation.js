@@ -15,14 +15,14 @@ let settingsIconURL = new URL(
 
 
 class Navigation extends Component {    
-    constructor(context){
-        super(context);
+    constructor(...args){
+        super(...args);
 
         this.childComponents = { IconButton };
         this.childContexts = {
             chat: {
                 iconLink: chatIconURL,
-                onClick: this.displayChats,
+                onClick: this.ctx.displayChats,
             },
             settings: {
                 iconLink: settingsIconURL,
@@ -31,8 +31,12 @@ class Navigation extends Component {
         };
     }
 
+    contextMethods(){
+        return [this.displayChats];
+    }
+
     displayChats(e){
-        console.log('displaying chats...');
+        console.log('displaying chats...', this.app.userId);
     }
 
     displaySettings(e){
