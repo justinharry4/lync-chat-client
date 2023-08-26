@@ -30,28 +30,64 @@ class MessageSection extends Component {
     }
 
     async generateChildContexts(){
-        let msgdata = await this.getMessages();
+        let chatData = await this.getChats();
         
-        this.addChildContextGroup('ctc', msgdata);
+        this.addChildContextGroup('chat', chatData);
     }
 
-    async getMessages(){
-        let promise = new Promise((resolve, reject) => {
-            let msgdata = [];
-            for (let i=1; i<=10; i++){
-                msgdata.push({
-                    photoUrl: defaultPhotoURL,
-                    contactName: 'Will Hansen',
-                    msgTime: '02:06',
-                    message: 'Good morning to you all!',
-                    status: i,
-                });
-            }
-            
-            resolve(msgdata);
-        });
+    async getChats(){
+        let app = this.app;
+        let chatData = [];
 
-        return promise
+        try {
+            let privateChatsURL = '/chat/privatechats/';
+            let pcResponse = await app.axios.get(privateChatsURL);
+            let privateChats = pcResponse.data;
+            
+            for (let pc of privateChats){
+                let participants = pc.participants;
+
+                let [userId] = participants
+                    .map((ppt) => ppt.user)
+                    .filter((id) => id != app.userId);
+                
+                let userURL = '/auth/users/' + userId + '/';
+                let userResponse = await app.axios.get(userURL);
+
+                let user = userResponse.data;
+                let username = user.username;
+                let profileId = user.profile;
+
+                let photoURL = '/chat/profiles/' + profileId + '/photo/';
+                let photoResponse = await app.axios.get(photoURL);
+                let [photo] = photoResponse.data;
+
+                let domain = app.axios.defaults.baseURL;
+                let bannerPhotoPath = (photo) ? photo.image: defaultPhotoURL;
+                let bannerPhotoURL = domain + bannerPhotoPath;
+                
+                let bannerCtx = {
+                    photoUrl: bannerPhotoURL,
+                    chatTitle: username,
+                    message: 'some text message',
+                    messageTime: '14:25',
+                    status: 'D',
+                    chatType: 'PC',
+                    chatId: pc.id,
+                }
+
+                chatData.push(bannerCtx);
+            }
+
+            return chatData;
+        } catch (error){
+            let response = error.response;
+
+            if (response && response.status == 401){
+                // this.app.handle401(response);
+            }
+            console.log(error);
+        };
     }
 
     view(){
@@ -64,7 +100,7 @@ class MessageSection extends Component {
                 <div id="msg-section__all-msgs">
                     <h2>All Messages</h2>
                     <ul>
-                    ${this.autoSubCompIterStr('ctc', (ctxName) => { 
+                    ${this.autoSubCompIterStr('chat', (ctxName) => { 
                     return `
                         <li>
                             <Component-lc lc--MessageBanner:${ctxName}--cl></Component-lc>
