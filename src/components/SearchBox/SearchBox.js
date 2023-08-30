@@ -3,7 +3,7 @@ import Component from '../Component/component.js';
 import './SearchBox.css';
 
 searchSvgURL = new URL(
-    '../../../public/images/svg/search-browse.svg',
+    '../../../public/images/svg/search-1.svg',
     import.meta.url
 )
 

@@ -1,0 +1,59 @@
+@charset "utf-8";
+
+.message-form {
+    /* border: 1px solid #0f0; */
+    background-color: var(--lightdarkmode-black);
+    padding: 0em 2em;
+    display: flex;
+    height: 6em;
+    align-items: center;
+    flex: 0 0 auto;
+}
+
+.message-form__form {
+    background-color: var(--darkmode-black);
+    display: flex;
+    height: 3.5em;
+    border-radius: 1.75em;
+    flex: 1 0 auto;
+    padding: .8em 1.5em;
+}
+
+.message-form__text-wrapper {
+    font-size: .8em;
+    flex: 1 0 auto;
+    /* border: 1px solid blue; */
+}
+
+.message-form__text-wrapper input {
+    background-color: transparent;
+    color: var(--lynclightgrey);
+    width: 100%;
+    border-radius: 14.5px;
+}
+
+.message-form__submit-wrapper {
+    /* border: 1px solid orange; */
+    margin-left: 1em;
+    display: flex;
+    align-items: center;
+}
+
+.message-form__submit-wrapper .iconbtn {
+    width: 35px;
+    height: 35px;
+    border-radius: 17.5px;
+    padding: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.message-form__submit-wrapper .iconbtn svg {
+    width: 25px;
+    fill: var(--lyncblue);
+}
+
+.message-form__submit-wrapper .iconbtn:hover {
+    background-color: #ffffff10;
+}

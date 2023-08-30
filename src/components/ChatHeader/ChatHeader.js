@@ -4,7 +4,7 @@ import IconButton from "../IconButton/IconButton.js";
 import './ChatHeader.css';
 
 let optionsIconURL = new URL(
-    '../../../public/images/svg/settings-icon.svg',
+    '../../../public/images/svg/more.svg',
     import.meta.url,
 )
 
@@ -24,6 +24,7 @@ class ChatHeader extends Component {
             options: {
                 iconLink: optionsIconURL,
                 onClick: this.displayOptions,
+                type: 'button',
             }
         }
     }

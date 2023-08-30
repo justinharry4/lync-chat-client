@@ -7,6 +7,7 @@ class IconButton extends Component {
     baseCtx = {
         iconLink: '',
         onClick: null,
+        type: 'button',
     }
 
     constructor(...args){
@@ -15,9 +16,9 @@ class IconButton extends Component {
         this.childComponents = { Button };
         this.childContexts = {
             btn: {
-                type: 'button',
+                type: this.ctx.type,
+                onClick: this.ctx.onClick,
                 labelText: '',
-                onClick: this.ctx.onClick
             },
         }
     }

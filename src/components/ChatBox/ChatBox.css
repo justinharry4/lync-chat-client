@@ -3,4 +3,11 @@
 #chatbox {
     width: 35em;
     border: 1px solid red;
+    display: flex;
+    flex-direction: column;
+}
+
+#chatbox .message-box {
+    flex: 1 1 auto;
+    padding: 0em 2em;
 }

@@ -4,12 +4,12 @@ import IconButton from "../IconButton/IconButton.js";
 import './Navigation.css';
 
 let chatIconURL = new URL(
-    '../../../public/images/svg/messages-icon.svg',
+    '../../../public/images/svg/messages.svg',
     import.meta.url
 )
 
 let settingsIconURL = new URL(
-    '../../../public/images/svg/settings-icon.svg',
+    '../../../public/images/svg/settings.svg',
     import.meta.url
 )
 
@@ -23,10 +23,12 @@ class Navigation extends Component {
             chat: {
                 iconLink: chatIconURL,
                 onClick: this.ctx.displayChats,
+                type: 'button',
             },
             settings: {
                 iconLink: settingsIconURL,
                 onClick: this.displaySettings,
+                type: 'button',
             }
         };
     }

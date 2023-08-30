@@ -1,0 +1,24 @@
+@charset "utf-8";
+
+.date-rule {
+    /* border: 1px solid red; */
+    font-size: .7em;
+    text-align: center;
+    color: var(--lynclightgrey);
+    position: relative;
+    margin: 1.2em 0em;
+}
+
+.date-rule span {
+    background-color: var(--darkmode-black);
+    padding: 0em 1.5em;
+}
+
+.date-rule hr {
+    position: absolute;
+    width: 100%;
+    border-color: #ffffff25;
+    /* border-color: blue; */
+    top: 50%;
+    z-index: -1;
+}
