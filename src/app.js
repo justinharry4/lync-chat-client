@@ -1,17 +1,24 @@
 import axios from "axios";
 
-import Router from "./routes/router.js"
+import Router from "./routes/router.js";
+import WebSocketClient from "./websockets/client.js";
 import { AccessTokenError } from "./errors/errors.js";
+
+
+const apiHttpDomain = 'http://localhost:8000';
+const apiWSPrivateURL = 'ws://localhost:8000/chat/privatechats/';
+const apiWSGroupURL = 'ws://localhost:8000/chat/groupchats/';
 
 class App {
     constructor(){
         this.router = new Router(this);
+        this.pcClient = new WebSocketClient(apiWSPrivateURL);
 
         this.isAuth = false;
         this.userId = null;
 
         this.axios = axios.create({
-            baseURL: 'http://localhost:8000',
+            baseURL: apiHttpDomain,
         });
 
         this.setDefaultAuthHeader();

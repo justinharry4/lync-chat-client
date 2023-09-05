@@ -46,9 +46,44 @@ class ChatBox extends Component {
         };
     }
 
+    contextMethods(){
+        return [ this.handleMessageSubmit ];
+    }
+
+    async handleMessageSubmit(e){
+        let app = this.app;
+
+        let $chatbox = this.$element;
+        let $messageBox = $chatbox.find('.message-box');
+
+        let text = e.context.text;
+        let messageCtx = {
+            text: text,
+            timeStamp: '',
+            status: 'P',
+            chatType: this.ctx.chatType,
+            isSenderSelf: true,
+        };
+
+        let textMessage = new TextMessage(this.app, messageCtx);
+        let $textMessage = await textMessage.render();
+        
+        $messageBox.append($textMessage);
+
+        let wsClient;
+        if (this.ctx.chatType == 'PC'){
+            wsClient = app.pcClient;
+        } else if (this.ctx.chatType == 'GC'){
+            wsClient = app.gcClient;
+        }
+
+        let chatId = this.ctx.chatId;
+        wsClient.sendText(text, chatId, textMessage);
+    }
+
     view(){
         return `
-            <section id="chatbox">
+            <section id="chatbox" lf--le-submitMessage:handleMessageSubmit--fl>
                 <Component-lc lc--ChatHeader:header--cl></Component-lc>
                 <div class="message-box">
                     <Component-lc lc--DateRule:date--cl></Component-lc>

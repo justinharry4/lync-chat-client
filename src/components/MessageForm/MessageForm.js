@@ -1,6 +1,7 @@
 import Component from "../Component/Component.js";
 import Input from "../Input/Input.js";
 import IconButton from "../IconButton/IconButton.js";
+import TextMessage from "../TextMessage/TextMessage.js";
 
 import './MessageForm.css';
 
@@ -26,8 +27,8 @@ class MessageForm extends Component {
                 type: 'text',
                 name: 'text',
                 value: '',
-                onFocus: this.handleInputFocus,
-                onBlur: this.handleInputBlur,
+                onFocus: () => {},
+                onBlur: () => {},
             },
             submit: {
                 type: 'submit',
@@ -38,29 +39,46 @@ class MessageForm extends Component {
     }
 
     contextMethods(){
-        return [ this.submitMessage ];
+        return [ this.submitMessage, this.reconnect ];
     }
 
-    submitMessage(e){
+    async submitMessage(e){
         e.preventDefault();
-
-        console.log('submitting message...')
+        
+        let $form = $(e.target);
+        let data = new FormData($form.get(0));
+        let message = data.get('text');
+        
+        if (message){
+            let $chatbox = $form.closest('#chatbox');
+    
+            let event = $.Event('le-submitMessage');
+            event.context = { text: message };
+    
+            $chatbox.trigger(event);
+            
+            console.log('submitting message...');
+        }
     }
 
-    handleInputFocus(){
-        console.log('focusing...');
-    }
+    reconnect(){
+        let pcClient = this.app.pcClient;
+        let ws = pcClient.ws;
+        let badStates = [ws.CLOSED, ws.CLOSING];
 
-    handleInputBlur(){
-        console.log('blurring...');
+        if (badStates.includes(ws.readyState)){
+            pcClient.reconnect();
+            console.log('reconnecting....');
+        }
     }
 
     view(){
         return `
             <div class="message-form">
-                <form class="message-form__form" lf--submit:submitMessage--fl>
+                <form class="message-form__form" lf--submit:submitMessage|click:reconnect--fl>
                     <div class="message-form__text-wrapper">
-                        <Component-lc lc--Input:text--cl></Component-lc>
+                        <Component-lc lc--Input:text--cl>
+                        </Component-lc>
                     </div>
                     <div class="message-form__submit-wrapper">
                         <Component-lc lc--IconButton:submit--cl></Component-lc>

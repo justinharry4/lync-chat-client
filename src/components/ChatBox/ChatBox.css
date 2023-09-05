@@ -2,9 +2,10 @@
 
 #chatbox {
     width: 35em;
-    border: 1px solid red;
+    /* border: 1px solid red; */
     display: flex;
     flex-direction: column;
+    margin: 0em 2px;
 }
 
 #chatbox .message-box {
