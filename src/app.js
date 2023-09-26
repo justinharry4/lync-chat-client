@@ -12,7 +12,6 @@ const apiWSGroupURL = 'ws://localhost:8000/chat/groupchats/';
 class App {
     constructor(){
         this.router = new Router(this);
-        this.pcClient = new WebSocketClient(apiWSPrivateURL);
 
         this.isAuth = false;
         this.userId = null;
@@ -26,6 +25,8 @@ class App {
 
     async initialize(){
         let token = localStorage.getItem('accessToken');
+
+        this.pcClient = new WebSocketClient(apiWSPrivateURL);
 
         if (!token) {
             this.isAuth = false;

@@ -3,11 +3,18 @@ import { v4 as uuidv4 } from "uuid";
 import { TextFrame, FrameParser } from "./frames.js";
 import { clientStatus, serverStatus } from "./status.js";
 import { messageHandler, Dispatcher } from "./dispatch.js";
+import protocol from "./protocol.js";
 
+// message delivery statuses (interface registry)
+const RGS_PENDING = 0;
+const RGS_IN_PROGRESS = 1;
+const RGS_COMPLETE = 2;
 
-const PENDING = 0;
-const IN_PROGRESS = 1;
-const COMPLETE = 2;
+// message delivery statuses (component)
+const MSG_IN_PROGRESS = 'P';
+const MSG_SENT = 'S';
+const MSG_DELIVERED = 'D';
+const MSG_VIEWED = 'V';
 
 
 class WebSocketClient {
@@ -36,8 +43,16 @@ class WebSocketClient {
         this.attachHandlers(this.ws);
     }
 
-    handleConnect(event){
+    handleConnect = (event) => {
         console.log('socket connected');
+
+        let enc = new TextEncoder();
+        let token = localStorage.getItem('accessToken');
+        let header = 'JWT ' + token;
+        let authData = { [protocol.AUTH_KEY]: header };
+        let message = enc.encode(JSON.stringify(authData));
+
+        this.ws.send(message);
     }
     
     handleClose(event){
@@ -74,7 +89,7 @@ class ChatInterface {
         let headText = fragments.shift();
 
         let data = {
-            'parent_id': chatId,
+            'chat_id': chatId,
             'content_format': 'TXT',
             'content': headText,
         };
@@ -94,25 +109,44 @@ class ChatInterface {
         this.client.ws.send(frame.data);
 
         let initialState = {
-            status: PENDING,
+            status: RGS_PENDING,
             queue: fragments,
             component: component,
         };
 
         this.registry.set(key, initialState);
     }
+
+    sendExtraText(key){
+    }
     
-    handleAcknowledgement = messageHandler(
+    handleSendTextAck = messageHandler(
         (key, statusCode, messageBody) => {
             console.log('acknowledgement recieved');
+
+            let clientCode = messageBody['client_code'];
+            let contentDigit = String(clientCode)[1];
+            let entry = this.registry.get(key);
+
+            if (contentDigit == protocol.EOC_DIGIT){
+                entry.component.updateDeliveryStatus(MSG_SENT);
+                this.registry.delete(key);
+            } else if (contentDigit == protocol.MCE_DIGIT){
+                entry.status = RGS_IN_PROGRESS;
+                this.sendExtraText(key);
+            }
         },
         [serverStatus.ACKNOWLEDGMENT]
+    )
+
+    handleTextData = messageHandler(
+        (key, statusCode, messageBody) => {
+            console.log('message recieved');
+            console.log(key, statusCode, messageBody);
+        },
+        [serverStatus.HEAD_TEXT_EOC, serverStatus.HEAD_TEXT_MCE]
     )
 }
 
 
 export default WebSocketClient;
-
-
-// let ws = new WebSocketClient();
-// ws.sendText({text: 'i am back home kids', chatId: 12});

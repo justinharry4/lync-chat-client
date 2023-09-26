@@ -18,7 +18,15 @@ const protocol = {
     MAX_CONTENT_SIZE: 1024 * 1024,
 
     // byte values
-    FILL_VALUE: 32
+    FILL_VALUE: 32,
+
+    // content status digits
+    EOC_DIGIT: 0,
+    MCE_DIGIT: 1,
+    OTHER_DIGIT: 2,
+
+    // auth
+    AUTH_KEY: 'AUTH_HEADER',
 };
 
 export default protocol;

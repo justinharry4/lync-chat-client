@@ -37,6 +37,11 @@ class TextMessage extends Component {
         console.log('displaying message options...');
     }
 
+    updateDeliveryStatus(status){
+        let $status = this.$element.find('.text-message__status');
+        $status.text(status);
+    }
+
     view(){
         return `
             <div class="text-message ${(this.ctx.isSenderSelf) ? 'self': 'other'}">

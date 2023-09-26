@@ -30,6 +30,7 @@ const serverStatus = {
     MESSAGE_REQUEST: 626,
 
     // server codes (error)
+    SERVER_NOT_AUTHENTICATED: 820,
     UNKNOWN_KEY: 821,
     PARSING_ERROR: 822,
     UNEXPECTED_INTERFACE: 823,
