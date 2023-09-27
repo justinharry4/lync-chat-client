@@ -15,10 +15,12 @@ class UnexpectedJSONInterface extends ProtocolError {
     status_code = clientStatus.UNEXPECTED_INTERFACE
 }
 
+class CodeNotAllowed extends ProtocolError {}
 
 export { 
     AccessTokenError,
     ProtocolError,
     InvalidFrame,
     UnexpectedJSONInterface,
+    CodeNotAllowed,
 };

@@ -1,20 +1,10 @@
 import { v4 as uuidv4 } from "uuid";
 
+import protocol from "./protocol.js";
 import { TextFrame, FrameParser } from "./frames.js";
 import { clientStatus, serverStatus } from "./status.js";
 import { messageHandler, Dispatcher } from "./dispatch.js";
-import protocol from "./protocol.js";
-
-// message delivery statuses (interface registry)
-const RGS_PENDING = 0;
-const RGS_IN_PROGRESS = 1;
-const RGS_COMPLETE = 2;
-
-// message delivery statuses (component)
-const MSG_IN_PROGRESS = 'P';
-const MSG_SENT = 'S';
-const MSG_DELIVERED = 'D';
-const MSG_VIEWED = 'V';
+import { MessageHandlerSet, AckHandlerSet } from "./handlers.js";
 
 
 class WebSocketClient {
@@ -75,11 +65,47 @@ class WebSocketClient {
 }
 
 
+class Registry {
+    PENDING = 0;
+    IN_PROGRESS = 1;
+    COMPLETE = 2;
+
+    map = new Map();
+
+    get(key){
+        return this.map.get(key);
+    }
+
+    set(key, value){
+        return this.map.set(key, value);
+    }
+
+    delete(key){
+        return this.map.delete(key);
+    }
+}
+
+
 class ChatInterface {
     constructor(client){
         this.client = client;
-        this.registry = new Map();
-        this.dispatcher = new Dispatcher(this);
+        this.registry = new Registry();
+
+        let handlerSetClasses = [
+            MessageHandlerSet,
+            AckHandlerSet,
+        ];
+
+        this.dispatcher = new Dispatcher(this, ...handlerSetClasses);
+    }
+
+    sendAck(key, serverCode, extraData){
+        extraData = extraData || {};
+
+        let data = { 'server_code': serverCode, ...extraData };
+        let frame = new TextFrame(key, clientStatus.ACKNOWLEDGMENT, data);
+        
+        this.client.ws.send(frame.data);
     }
 
     sendText(text, chatId, component){
@@ -109,7 +135,7 @@ class ChatInterface {
         this.client.ws.send(frame.data);
 
         let initialState = {
-            status: RGS_PENDING,
+            status: this.registry.PENDING,
             queue: fragments,
             component: component,
         };
@@ -119,33 +145,6 @@ class ChatInterface {
 
     sendExtraText(key){
     }
-    
-    handleSendTextAck = messageHandler(
-        (key, statusCode, messageBody) => {
-            console.log('acknowledgement recieved');
-
-            let clientCode = messageBody['client_code'];
-            let contentDigit = String(clientCode)[1];
-            let entry = this.registry.get(key);
-
-            if (contentDigit == protocol.EOC_DIGIT){
-                entry.component.updateDeliveryStatus(MSG_SENT);
-                this.registry.delete(key);
-            } else if (contentDigit == protocol.MCE_DIGIT){
-                entry.status = RGS_IN_PROGRESS;
-                this.sendExtraText(key);
-            }
-        },
-        [serverStatus.ACKNOWLEDGMENT]
-    )
-
-    handleTextData = messageHandler(
-        (key, statusCode, messageBody) => {
-            console.log('message recieved');
-            console.log(key, statusCode, messageBody);
-        },
-        [serverStatus.HEAD_TEXT_EOC, serverStatus.HEAD_TEXT_MCE]
-    )
 }
 
 

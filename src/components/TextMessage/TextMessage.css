@@ -32,6 +32,7 @@
     background-color: var(--lightdarkmode-black);
     border-radius: 10px;
     max-width: 15em;
+    min-width: 4.8em;
     padding: 1em 1em 2em;
     display: inline-block;
     position: relative;

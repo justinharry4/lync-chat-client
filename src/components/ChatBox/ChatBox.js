@@ -7,6 +7,12 @@ import MessageForm from "../MessageForm/MessageForm.js";
 import './ChatBox.css';
 
 
+const FORMAT_TEXT = 'TXT';
+const FORMAT_IMAGE = 'IMG';
+const FORMAT_AUDIO = 'AUD';
+const FORMAT_VIDEO = 'VID';
+
+
 class ChatBox extends Component {
     baseCtx = {
         chatId: null,
@@ -33,28 +39,19 @@ class ChatBox extends Component {
             msgForm: {
                 chatId: this.ctx.chatId,
                 chatType: this.ctx.chatType,
-            },
-            message: {
-                senderName: this.ctx.headerTitle, 
-                photoUrl: this.ctx.headerPhotoUrl,
-                text: 'Hi there! How are you?',
-                timeStamp: '18:29',
-                status: 'D',
-                chatType: 'PC',
-                isSenderSelf: false,
             }
         };
     }
 
     contextMethods(){
-        return [ this.handleMessageSubmit ];
+        return [ 
+            this.handleMessageSubmit,
+            this.handleNewMessage,
+        ];
     }
 
     async handleMessageSubmit(e){
         let app = this.app;
-
-        let $chatbox = this.$element;
-        let $messageBox = $chatbox.find('.message-box');
 
         let text = e.context.text;
         let messageCtx = {
@@ -68,7 +65,7 @@ class ChatBox extends Component {
         let textMessage = new TextMessage(this.app, messageCtx);
         let $textMessage = await textMessage.render();
         
-        $messageBox.append($textMessage);
+        this.displayNewMessage($textMessage);
 
         let wsClient;
         if (this.ctx.chatType == 'PC'){
@@ -81,13 +78,46 @@ class ChatBox extends Component {
         wsClient.sendText(text, chatId, textMessage);
     }
 
+    async handleNewMessage(e){
+        let context = e.context;
+
+        if (context.chatType == this.ctx.chatType &&
+            context.chatId == this.ctx.chatId)
+        {
+            if (context.format == FORMAT_TEXT){
+                let messageCtx = {
+                    text: context.text,
+                    timeStamp: context.timeStamp,
+                    chatType: context.chatType,
+                    isSenderSelf: false,
+                    serverId: context.messageId,
+                }
+    
+                let textMessage = new TextMessage(this.app, messageCtx);
+                let $textMessage = await textMessage.render();
+    
+                this.displayNewMessage($textMessage);
+                console.log('new message displayed');
+            }
+        }
+    }
+
+    displayNewMessage($message){
+        let $chatbox = this.$element;
+        let $messageBox = $chatbox.find('.message-box');
+
+        $messageBox.append($message);
+    }
+
     view(){
         return `
-            <section id="chatbox" lf--le-submitMessage:handleMessageSubmit--fl>
+            <section
+                id="chatbox"
+                lf--le-submitMessage:handleMessageSubmit|le-newChatMessage:handleNewMessage--fl
+            >
                 <Component-lc lc--ChatHeader:header--cl></Component-lc>
                 <div class="message-box">
                     <Component-lc lc--DateRule:date--cl></Component-lc>
-                    <Component-lc lc--TextMessage:message--cl></Component-lc>
                 </div>
                 <Component-lc lc--MessageForm:msgForm--cl></Component-lc>
             </section>

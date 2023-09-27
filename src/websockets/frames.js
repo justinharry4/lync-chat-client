@@ -66,14 +66,15 @@ class TextFrame {
     static getFragments(text){
         let encoder = new TextEncoder();
         let array = encoder.encode(text);
-
+        
         let num = array.byteLength / protocol.MAX_CONTENT_SIZE;
-        let roundNum = parseInt(num);
-        let fragmentCount = (num == roundNum) ? roundNum: roundNum + 1;
-
+        let fixedNum = num.toFixed(15);
+        let roundNum = parseInt(fixedNum);
+        let fragmentCount = (fixedNum == roundNum) ? roundNum: roundNum + 1;
+        
         let fragments = [];
         let decoder = new TextDecoder('utf-8');
-
+        
         for (let i=0; i < fragmentCount; i++){
             let start = protocol.MAX_CONTENT_SIZE * i;
 

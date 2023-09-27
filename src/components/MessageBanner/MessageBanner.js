@@ -31,7 +31,6 @@ class MessageBanner extends Component {
         event.context = { ctx: chatBoxCtx };
 
         $page.trigger(event);
-        console.log('triggered');
     }
 
     view(){

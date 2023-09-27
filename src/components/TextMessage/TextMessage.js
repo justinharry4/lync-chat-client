@@ -17,11 +17,14 @@ class TextMessage extends Component {
         photoUrl: null, // gc
         status: null, // self
         chatType: null,
-        isSenderSelf: null
+        isSenderSelf: null,
+        serverId: null,
     }
 
     constructor(...args){
         super(...args);
+
+        this.ctx.timeStamp = this.formatTimeStamp(this.ctx.timeStamp);
 
         this.childComponents = { IconButton };
         this.childContexts = {
@@ -37,9 +40,45 @@ class TextMessage extends Component {
         console.log('displaying message options...');
     }
 
+    formatTimeStamp(date){
+        let newDate = new Date(date);
+
+        if (isNaN(newDate.valueOf())){
+            return '';
+        }
+
+        let hours = newDate.getHours();
+        let minutes = newDate.getMinutes();
+        
+        let formatNumber = (num) => (num < 10) ? ('0' + num): num;
+        let formatedHours = formatNumber(hours);
+        let formatedMins = formatNumber(minutes);
+
+        let timeStr = formatedHours + ':' + formatedMins;
+        return timeStr;
+    }
+
     updateDeliveryStatus(status){
         let $status = this.$element.find('.text-message__status');
+
         $status.text(status);
+        this.ctx.status = status;
+    }
+
+    setId(id){
+        if (!this.ctx.serverId){
+            this.ctx.serverId = id;
+        }
+    }
+
+    setTimeStamp(date){
+        if (!this.ctx.timeStamp){
+            let time = this.formatTimeStamp(date);
+            let $time = this.$element.find('.text-message__time-wrapper time');
+
+            $time.text(time);
+            this.ctx.timeStamp = date;
+        }
     }
 
     view(){
