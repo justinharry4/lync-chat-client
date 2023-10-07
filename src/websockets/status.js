@@ -1,16 +1,17 @@
 const clientStatus = {
     // client codes (no error)
-    HEAD_TEXT_EOC: 701,
-    HEAD_TEXT_MCE: 711,
-    MORE_TEXT_EOC: 702,
-    MORE_TEXT_MCE: 712,
-    FILE_METADATA: 723,
-    HEAD_FILE_EOC: 704,
-    HEAD_FILE_MCE: 714,
-    MORE_FILE_EOC: 705,
-    MORE_FILE_MCE: 715,
-    ACKNOWLEDGMENT: 726,
-    MESSAGE_STATUS: 727,
+    // HEAD_TEXT_EOC: 701,
+    // HEAD_TEXT_MCE: 711,
+    // MORE_TEXT_EOC: 702,
+    // MORE_TEXT_MCE: 712,
+    TEXT_DATA: 701,
+    FILE_METADATA: 722,
+    HEAD_FILE_EOC: 703,
+    HEAD_FILE_MCE: 713,
+    MORE_FILE_EOC: 704,
+    MORE_FILE_MCE: 714,
+    ACKNOWLEDGMENT: 725,
+    MESSAGE_STATUS: 726,
 
     // client codes (error)
     UNKNOWN_KEY: 921,
@@ -20,17 +21,18 @@ const clientStatus = {
 
 const serverStatus = {
     // server codes (no error)
-    HEAD_TEXT_EOC: 601,
-    HEAD_TEXT_MCE: 611,
-    MORE_TEXT_EOC: 602,
-    MORE_TEXT_MCE: 612,
-    FILE_DATA: 623,
-    ACKNOWLEDGMENT: 624,
-    MESSAGE_STATUS: 625,
-    MESSAGE_REQUEST: 626,
+    // HEAD_TEXT_EOC: 601,
+    // HEAD_TEXT_MCE: 611,
+    // MORE_TEXT_EOC: 602,
+    // MORE_TEXT_MCE: 612,
+    TEXT_DATA: 601,
+    FILE_DATA: 622,
+    ACKNOWLEDGMENT: 623,
+    MESSAGE_STATUS: 624,
+    MESSAGE_REQUEST: 625,
 
     // server codes (error)
-    SERVER_NOT_AUTHENTICATED: 820,
+    NOT_AUTHENTICATED: 820,
     UNKNOWN_KEY: 821,
     PARSING_ERROR: 822,
     UNEXPECTED_INTERFACE: 823,

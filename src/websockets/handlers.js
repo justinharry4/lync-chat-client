@@ -8,19 +8,10 @@ const MSG_SENT = 'S';
 const MSG_DELIVERED = 'D';
 const MSG_VIEWED = 'V';
 
-head_text_codes = [
-    serverStatus.HEAD_TEXT_EOC,
-    serverStatus.HEAD_TEXT_MCE
-]
-extra_text_codes = [
-    serverStatus.MORE_TEXT_EOC,
-    serverStatus.MORE_TEXT_MCE
-]
-
 
 class MessageHandlerSet extends HandlerSet {
     handleTextData = messageHandler(
-        head_text_codes,
+        [serverStatus.TEXT_DATA],
         (key, statusCode, messageBody) => {
             console.log('text message recieved');
 
@@ -50,38 +41,38 @@ class MessageHandlerSet extends HandlerSet {
 
 
 class AckHandlerSet extends HandlerSet {
-    handleEOCTextAck = ackHandler([
-        clientStatus.HEAD_TEXT_EOC,
-        clientStatus.MORE_TEXT_EOC,
-    ],
+    handleTextAck = ackHandler(
+    [clientStatus.TEXT_DATA],
     (key, statusCode, messageBody) => {
-        console.log('acknowledgement recieved eoc');
+        console.log('acknowledgement recieved text');
         
         let chat = this.interface;
         let entry = chat.registry.get(key);
         let messageId = messageBody['message_id'];
+        let timeStamp = messageBody['time_stamp'];
 
         entry.component.updateDeliveryStatus(MSG_SENT);
-        entry.component.setTimeStamp(messageBody['time_stamp']);
+        entry.component.setTimeStamp(timeStamp);
         entry.component.setId(messageId);
+
         chat.registry.delete(key);
     }
     )
 
-    handleMCETextAck = ackHandler([
-        clientStatus.HEAD_TEXT_MCE,
-        clientStatus.MORE_TEXT_MCE,
-    ],
-    (key, statusCode, messageBody) => {
-        console.log('acknowledgement recieved mce');
+    // handleMCETextAck = ackHandler([
+    //     clientStatus.HEAD_TEXT_MCE,
+    //     clientStatus.MORE_TEXT_MCE,
+    // ],
+    // (key, statusCode, messageBody) => {
+    //     console.log('acknowledgement recieved mce');
 
-        let chat = this.interface;
-        let entry = chat.registry.get(key);
+    //     let chat = this.interface;
+    //     let entry = chat.registry.get(key);
 
-        entry.status = chat.registry.IN_PROGRESS;
-        chat.sendExtraText(key);
-    }
-    )
+    //     entry.status = chat.registry.IN_PROGRESS;
+    //     chat.sendExtraText(key);
+    // }
+    // )
 }
 
 

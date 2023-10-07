@@ -111,23 +111,23 @@ class ChatInterface {
     sendText(text, chatId, component){
         let key = uuidv4();
         
-        let fragments = TextFrame.getFragments(text);
-        let headText = fragments.shift();
+        // let fragments = TextFrame.getFragments(text);
+        // let headText = fragments.shift();
 
         let data = {
             'chat_id': chatId,
             'content_format': 'TXT',
-            'content': headText,
+            'content': text,
         };
 
-        let statusCode;
-        if (fragments.length > 0){
-            statusCode = clientStatus.HEAD_TEXT_MCE;
-        } else {
-            statusCode = clientStatus.HEAD_TEXT_EOC;
-        }
+        // let statusCode;
+        // if (fragments.length > 0){
+        //     statusCode = clientStatus.HEAD_TEXT_MCE;
+        // } else {
+        //     statusCode = clientStatus.HEAD_TEXT_EOC;
+        // }
 
-        let frame = new TextFrame(key, statusCode, data);
+        let frame = new TextFrame(key, clientStatus.TEXT_DATA, data);
 
         // let dec = new TextDecoder('utf-8');
         // console.log(frame.data, dec.decode(frame.data));
@@ -136,14 +136,10 @@ class ChatInterface {
 
         let initialState = {
             status: this.registry.PENDING,
-            queue: fragments,
             component: component,
         };
 
         this.registry.set(key, initialState);
-    }
-
-    sendExtraText(key){
     }
 }
 
