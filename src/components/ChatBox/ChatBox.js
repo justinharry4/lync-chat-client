@@ -51,6 +51,11 @@ class ChatBox extends Component {
     }
 
     async handleMessageSubmit(e){
+        let tree = this.tree;
+        console.log('ref', tree.ref);
+        console.log('parent', tree.parent());
+        console.log('kids', tree.children())
+        // ------
         let app = this.app;
 
         let text = e.context.text;
@@ -80,7 +85,7 @@ class ChatBox extends Component {
 
     async handleNewMessage(e){
         let context = e.context;
-
+        
         if (context.chatType == this.ctx.chatType &&
             context.chatId == this.ctx.chatId)
         {

@@ -37,11 +37,18 @@ class MessageHandlerSet extends HandlerSet {
             this.interface.sendAck(key, statusCode);
         }
     )
+
+    handleMessageStatusData = messageHandler(
+        [serverStatus.MESSAGE_STATUS],
+        (key, statusCode, messageBody) => {
+            console.log(key, statusCode, messageBody);
+        }
+    )
 }
 
 
 class AckHandlerSet extends HandlerSet {
-    handleTextAck = ackHandler(
+    ackTextSend = ackHandler(
     [clientStatus.TEXT_DATA],
     (key, statusCode, messageBody) => {
         console.log('acknowledgement recieved text');
@@ -58,21 +65,6 @@ class AckHandlerSet extends HandlerSet {
         chat.registry.delete(key);
     }
     )
-
-    // handleMCETextAck = ackHandler([
-    //     clientStatus.HEAD_TEXT_MCE,
-    //     clientStatus.MORE_TEXT_MCE,
-    // ],
-    // (key, statusCode, messageBody) => {
-    //     console.log('acknowledgement recieved mce');
-
-    //     let chat = this.interface;
-    //     let entry = chat.registry.get(key);
-
-    //     entry.status = chat.registry.IN_PROGRESS;
-    //     chat.sendExtraText(key);
-    // }
-    // )
 }
 
 

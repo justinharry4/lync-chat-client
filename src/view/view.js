@@ -1,4 +1,5 @@
 import { get } from '../utils/utils.js';
+import Component from '../components/Component/Component.js';
 
 
 function insertDynamicText(rawTemplateStr, context){
@@ -232,8 +233,9 @@ let view = {
 
 
 class View {
-    constructor(component){
+    constructor(component, parent){
         this.component = component;
+        this.parent = parent;
     }
 
     insertDynamicText(rawTemplateStr, context){
@@ -385,7 +387,7 @@ class View {
             } catch (error){
                 if (error.jqXHR){
                     console.log("Request to '" + src + "' Failed!");
-                    console.log(jqXHR);
+                    console.log(error.jqXHR);
                 } else {
                     console.log(error);
                 }
@@ -444,8 +446,12 @@ class View {
             let app = component.app;
             
             let cmp = new cmpClass(app, ctx);
-            let $cmpEl = await cmp.render();
-    
+
+            let $cmpEl = await cmp.render(component);
+
+            // console.log(cmp);
+            this.addComponentToTree(cmp, component);
+            
             $cmpEl.attr('id', idAttr).addClass(classAttr);
             $cmpEl.append(childNodes);
             $subCmpDiv.replaceWith($cmpEl);
@@ -454,6 +460,16 @@ class View {
         let $fullElement = $container.children();
     
         return $fullElement;
+    }
+
+    addComponentToTree(ref, parent){
+        if (parent){
+            let refTree = ref.tree;
+            let parentTree = parent.tree;
+    
+            parentTree.addChild(ref);
+            refTree.setParent(parent);
+        }
     }
 
     async createElement(){
@@ -469,6 +485,9 @@ class View {
         let $componentWithSvg = await this.renderSvg(lfAttrViewStr);
         let $lightComponent = this.addEventListeners($componentWithSvg, cmp.ctx);
         let $fullComponent = await this.renderSubComponents($lightComponent, cmp);
+
+        // console.log(cmp, this.parent);
+        // this.addComponentToTree(cmp, this.parent);
 
         return $fullComponent;
     }

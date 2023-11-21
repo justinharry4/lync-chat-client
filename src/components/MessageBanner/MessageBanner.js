@@ -1,4 +1,4 @@
-import Component from "../Component/component.js";
+import Component from "../Component/Component.js";
 
 import './MessageBanner.css';
 

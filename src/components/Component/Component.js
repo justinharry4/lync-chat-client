@@ -5,6 +5,7 @@ class Component {
         this.app = app;
         this.ctx = context;
         this.state = {};
+        this.tree = new ComponentTree(this);
         
         this.extendContext();
     }
@@ -87,26 +88,76 @@ class Component {
         });
     }
 
-    async render(){
+    async render(parent){
         await this.generateChildContexts();
         
-        // let rawViewStr = await this.viewPromise();
-
-        // let ltResolvedViewStr = view.insertDynamicText(rawViewStr, this.ctx);
-        // let lsAttrViewStr = view.addSvgSourceAttributes(ltResolvedViewStr);
-        // let lcAttrViewStr = view.addComponentAttributes(lsAttrViewStr);
-        // let lfAttrViewStr = view.addHandlerAttributes(lcAttrViewStr);
-        
-        // let $componentWithSvg = await view.renderSvg(lfAttrViewStr);
-        // let $lightComponent = view.addEventListeners($componentWithSvg, this.ctx);
-        // let $fullComponent = await view.renderSubComponents($lightComponent, this);
-
-        let view = new View(this);
+        let view = new View(this, parent);
         let $fullComponent = await view.createElement();
         
         this.$element = $fullComponent;
 
+        this.parentCmp = parent;
+
         return this.$element;
+    }
+}
+
+
+class ComponentTree {
+    constructor(cmp){
+        this.ref = new ComponentTreeMember(cmp);
+        this._parent = null;
+        this._children = [];
+        this._descendants = [];
+    }
+
+    setParent(parentCmp){
+        if (!this.parent){
+            if (this.isComponent(parentCmp)){
+                this._parent = new ComponentTreeMember(parentCmp);
+            }
+        }
+    }
+
+    addChild(childCmp){
+        if (this.isComponent(childCmp)){
+            let member = new ComponentTreeMember(childCmp);
+            this._children.push(member);
+        }
+    }
+
+    isComponent(cmp){
+        // console.log(cmp instanceof Component);
+        if (cmp instanceof Component){
+            return true;
+        } else {
+            throw new Error(
+                'parent component must be a subclass of `Component`'
+            );
+        }
+    }
+
+    parent(){
+        return this._parent;
+    }
+
+    children(type){
+        if (!type){
+            return this._children;
+        } else {
+        }
+    }
+
+    descendants(type){
+        // desc code
+    }
+}
+
+
+class ComponentTreeMember {
+    constructor(cmp){
+        this.cmp = cmp;
+        this.type = cmp.__proto__.constructor.name;
     }
 }
 

@@ -110,22 +110,12 @@ class ChatInterface {
 
     sendText(text, chatId, component){
         let key = uuidv4();
-        
-        // let fragments = TextFrame.getFragments(text);
-        // let headText = fragments.shift();
 
         let data = {
             'chat_id': chatId,
             'content_format': 'TXT',
             'content': text,
         };
-
-        // let statusCode;
-        // if (fragments.length > 0){
-        //     statusCode = clientStatus.HEAD_TEXT_MCE;
-        // } else {
-        //     statusCode = clientStatus.HEAD_TEXT_EOC;
-        // }
 
         let frame = new TextFrame(key, clientStatus.TEXT_DATA, data);
 
