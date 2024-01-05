@@ -91,12 +91,10 @@ class Component {
     async render(parent){
         await this.generateChildContexts();
         
-        let view = new View(this, parent);
-        let $fullComponent = await view.createElement();
+        let view = new View(this);
+        let $fullComponent = await view.createElement(parent);
         
         this.$element = $fullComponent;
-
-        this.parentCmp = parent;
 
         return this.$element;
     }
@@ -112,9 +110,10 @@ class ComponentTree {
     }
 
     setParent(parentCmp){
-        if (!this.parent){
+        if (!this.parent()){
             if (this.isComponent(parentCmp)){
                 this._parent = new ComponentTreeMember(parentCmp);
+                // console.log('parent set', parentCmp);
             }
         }
     }

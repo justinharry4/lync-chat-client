@@ -31,7 +31,7 @@ class Chat extends Page {
         let ctx = e.context.ctx;
 
         let chatbox = new ChatBox(this.app, ctx);
-        let $chatbox = await chatbox.render();
+        let $chatbox = await chatbox.render(this);
         let $oldChatbox = $page.find('#chatbox');
 
         $oldChatbox.remove();

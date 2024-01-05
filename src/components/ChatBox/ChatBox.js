@@ -51,11 +51,11 @@ class ChatBox extends Component {
     }
 
     async handleMessageSubmit(e){
-        let tree = this.tree;
-        console.log('ref', tree.ref);
-        console.log('parent', tree.parent());
-        console.log('kids', tree.children())
-        // ------
+        // let tree = this.tree;
+        // console.log('ref', tree.ref);
+        // console.log('parent', tree.parent());
+        // console.log('kids', tree.children())
+
         let app = this.app;
 
         let text = e.context.text;
@@ -68,7 +68,7 @@ class ChatBox extends Component {
         };
 
         let textMessage = new TextMessage(this.app, messageCtx);
-        let $textMessage = await textMessage.render();
+        let $textMessage = await textMessage.render(this);
         
         this.displayNewMessage($textMessage);
 
@@ -99,8 +99,8 @@ class ChatBox extends Component {
                 }
     
                 let textMessage = new TextMessage(this.app, messageCtx);
-                let $textMessage = await textMessage.render();
-    
+                let $textMessage = await textMessage.render(this);
+
                 this.displayNewMessage($textMessage);
                 console.log('new message displayed');
             }

@@ -233,9 +233,8 @@ let view = {
 
 
 class View {
-    constructor(component, parent){
+    constructor(component){
         this.component = component;
-        this.parent = parent;
     }
 
     insertDynamicText(rawTemplateStr, context){
@@ -448,9 +447,6 @@ class View {
             let cmp = new cmpClass(app, ctx);
 
             let $cmpEl = await cmp.render(component);
-
-            // console.log(cmp);
-            this.addComponentToTree(cmp, component);
             
             $cmpEl.attr('id', idAttr).addClass(classAttr);
             $cmpEl.append(childNodes);
@@ -472,7 +468,7 @@ class View {
         }
     }
 
-    async createElement(){
+    async createElement(parent){
         let cmp = this.component;
 
         let rawViewStr = await cmp.viewPromise();
@@ -484,10 +480,11 @@ class View {
         
         let $componentWithSvg = await this.renderSvg(lfAttrViewStr);
         let $lightComponent = this.addEventListeners($componentWithSvg, cmp.ctx);
-        let $fullComponent = await this.renderSubComponents($lightComponent, cmp);
 
-        // console.log(cmp, this.parent);
-        // this.addComponentToTree(cmp, this.parent);
+        // console.log(cmp);
+        this.addComponentToTree(cmp, parent);
+
+        let $fullComponent = await this.renderSubComponents($lightComponent, cmp);
 
         return $fullComponent;
     }
