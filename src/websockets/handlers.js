@@ -41,7 +41,21 @@ class MessageHandlerSet extends HandlerSet {
     handleMessageStatusData = messageHandler(
         [serverStatus.MESSAGE_STATUS],
         (key, statusCode, messageBody) => {
-            console.log(key, statusCode, messageBody);
+            console.log('delivery status received');
+
+            let $chatbox = $('#chatbox');
+
+            let event = $.Event('le-status');
+            event.context = {
+                chatId: messageBody['chat_id'],
+                chatType: messageBody['chat_type'],
+                status: messageBody['delivery_status'],
+                messageId: messageBody['message_id'],
+            }
+    
+            if ($chatbox.length != 0){
+                $chatbox.trigger(event);
+            }
         }
     )
 }

@@ -47,6 +47,7 @@ class ChatBox extends Component {
         return [ 
             this.handleMessageSubmit,
             this.handleNewMessage,
+            this.handleMessageDeliveryStatusUpdate,
         ];
     }
 
@@ -114,11 +115,31 @@ class ChatBox extends Component {
         $messageBox.append($message);
     }
 
+    handleMessageDeliveryStatusUpdate(e){
+        let context = e.context;
+
+        if (context.chatType == this.ctx.chatType &&
+            context.chatId == this.ctx.chatId)
+        {
+            let tree = this.tree;
+            for (let member of tree.children()){
+                if (member.type == 'TextMessage'){
+                    let textMessage = member.cmp;
+    
+                    if (textMessage.ctx.serverId == context.messageId){
+                        textMessage.updateDeliveryStatus(context.status);
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
     view(){
         return `
             <section
                 id="chatbox"
-                lf--le-submitMessage:handleMessageSubmit|le-newChatMessage:handleNewMessage--fl
+                lf--le-submitMessage:handleMessageSubmit|le-newChatMessage:handleNewMessage|le-status:handleMessageDeliveryStatusUpdate--fl
             >
                 <Component-lc lc--ChatHeader:header--cl></Component-lc>
                 <div class="message-box">

@@ -7,3 +7,4 @@ le-error -- emitted when data validation has failed -- form-related elements
 le-validInput -- emitted when data validation is successful -- form-related elements
 le-openChatBox -- emitted when an active chatbox is to be displayed -- Chat (page)
 le-newChatMessage -- emitted when a new chat message is received or sent -- ChatBox, MessageBanner
+le-status -- emitted when a new delivery status message is received -- ChatBox
