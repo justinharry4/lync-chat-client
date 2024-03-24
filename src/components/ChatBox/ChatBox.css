@@ -6,9 +6,12 @@
     display: flex;
     flex-direction: column;
     margin: 0em 2px;
+    position: relative;
 }
 
 #chatbox .message-box {
     flex: 1 1 auto;
     padding: 0em 2em;
+    /* border: 1px solid purple; */
+    overflow-y: scroll;
 }

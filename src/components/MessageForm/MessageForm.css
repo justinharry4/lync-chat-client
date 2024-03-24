@@ -8,6 +8,7 @@
     height: 6em;
     align-items: center;
     flex: 0 0 auto;
+    position: relative;
 }
 
 .message-form__form {
