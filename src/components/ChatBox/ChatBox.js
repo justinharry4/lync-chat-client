@@ -4,13 +4,9 @@ import DateRule from "../DateRule/DateRule.js";
 import TextMessage from "../TextMessage/TextMessage.js";
 import MessageForm from "../MessageForm/MessageForm.js";
 
+import { MSG_FORMATS } from "../../utils/utils.js";
+
 import './ChatBox.css';
-
-
-const FORMAT_TEXT = 'TXT';
-const FORMAT_IMAGE = 'IMG';
-const FORMAT_AUDIO = 'AUD';
-const FORMAT_VIDEO = 'VID';
 
 
 class ChatBox extends Component {
@@ -52,11 +48,6 @@ class ChatBox extends Component {
     }
 
     async handleMessageSubmit(e){
-        // let tree = this.tree;
-        // console.log('ref', tree.ref);
-        // console.log('parent', tree.parent());
-        // console.log('kids', tree.children())
-
         let app = this.app;
 
         let text = e.context.text;
@@ -90,7 +81,7 @@ class ChatBox extends Component {
         if (context.chatType == this.ctx.chatType &&
             context.chatId == this.ctx.chatId)
         {
-            if (context.format == FORMAT_TEXT){
+            if (context.format == MSG_FORMATS.TEXT){
                 let messageCtx = {
                     text: context.text,
                     timeStamp: context.timeStamp,

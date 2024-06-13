@@ -1,8 +1,12 @@
 .msg-banner {
     display: flex;
-    padding: .45em 0em;
+    padding: .45em var(--side-padding);
     font-size: .9em;
     cursor: pointer;
+}
+
+.msg-banner:hover {
+    background-color: var(--hovergrey);
 }
 
 .msg-banner__photo {
@@ -28,6 +32,7 @@
 
 .msg-banner__name-wrapper time {
     color: var(--lynclightgrey);
+    font-size: .9em;
 }
 
 .msg-banner__msg-wrapper {
@@ -38,4 +43,12 @@
 
 .msg-banner__message  {
     flex: 1 0 auto;
+}
+
+.msg-banner__msg-count {
+    background-color: var(--lyncblue);
+    color: #fff;
+    font-size: .9em;
+    padding: 3px;
+    border-radius: 50%;
 }

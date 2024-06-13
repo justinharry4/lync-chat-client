@@ -88,13 +88,21 @@ class Component {
         });
     }
 
+    async preRender(){}
+
+    async postRender(){}
+
     async render(parent){
         await this.generateChildContexts();
         
+        await this.preRender()
+
         let view = new View(this);
         let $fullComponent = await view.createElement(parent);
         
         this.$element = $fullComponent;
+
+        await this.postRender()
 
         return this.$element;
     }

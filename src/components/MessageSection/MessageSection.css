@@ -1,8 +1,14 @@
 #msg-section {
     /* border: solid 1px blue; */
-    padding: .7em 1.7em;
+    /* padding: .7em 1.7em; */
+    padding: .7em 0em;
     color: #fff;
     background-color: var(--lightdarkmode-black);
+    --side-padding: 1.7em;
+}
+
+#msg-section__top-container {
+    padding: 0em var(--side-padding);
 }
 
 #msg-section .searchbox {
@@ -14,5 +20,8 @@
     font-weight: normal;
     color: var(--lynclightgrey);
     margin-bottom: .8em;
+    padding: 0em var(--side-padding);
 }
+
+
 

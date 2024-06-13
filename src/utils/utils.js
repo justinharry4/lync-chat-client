@@ -43,6 +43,49 @@ async function post(url, data){
     return result;
 }
 
+function validateDate(date){
+    if (isNaN(date.valueOf())){
+        throw new Error('Invalid Date object passed');
+    }
+}
+
+function zeroSingleDigitNumber(number){
+    return (number < 10) ? ('0' + number): number;
+}
+
+function toHourMinuteFormat(datetimeStr){
+    let newDate = new Date(datetimeStr);
+
+    // if (isNaN(newDate.valueOf())){
+    //     return '';
+    // }
+
+    validateDate(newDate);
+
+    let hours = newDate.getHours();
+    let minutes = newDate.getMinutes();
+    
+    // let formatNumber = (num) => (num < 10) ? ('0' + num): num;
+    let formatedHours = zeroSingleDigitNumber(hours);
+    let formatedMins = zeroSingleDigitNumber(minutes);
+
+    let timeStr = formatedHours + ':' + formatedMins;
+    return timeStr;
+}
+
+
+function toSlashedDayMonthYearFormat(datetimeStr){
+    let date = new Date(datetimeStr);
+
+    validateDate(date);
+
+    let day = zeroSingleDigitNumber(date.getDate());
+    let month = zeroSingleDigitNumber(date.getMonth() + 1);
+    let year = date.getFullYear();
+
+    return day + '/' + month + '/' + year;
+}
+
 
 const time = {};
 
@@ -135,5 +178,18 @@ class FormattedDate {
     // get yearsAgo(){}
 }
 
+const MSG_FORMATS = {
+    TEXT: 'TXT',
+    IMAGE: 'IMG',
+    AUDIO: 'AUD',
+    VIDEO: 'VID',
+}
 
-export { get, post, FormattedDate };
+export { 
+    get,
+    post,
+    FormattedDate,
+    toHourMinuteFormat,
+    toSlashedDayMonthYearFormat,
+    MSG_FORMATS,
+};

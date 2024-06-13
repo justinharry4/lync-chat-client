@@ -1,6 +1,8 @@
 import Component from "../Component/Component.js";
 import IconButton from "../IconButton/IconButton.js";
 
+import { toHourMinuteFormat } from "../../utils/utils.js";
+
 import './TextMessage.css';
 
 
@@ -12,7 +14,7 @@ let optionsIconURL = new URL(
 class TextMessage extends Component {
     baseCtx = {
         text: null,
-        timeStamp: null,
+        timeStamp: null, // isostring
         senderName: null, // gc
         photoUrl: null, // gc
         status: null, // self
@@ -24,7 +26,7 @@ class TextMessage extends Component {
     constructor(...args){
         super(...args);
 
-        this.ctx.timeStamp = this.formatTimeStamp(this.ctx.timeStamp);
+        this.ctx.timeStamp = toHourMinuteFormat(this.ctx.timeStamp);
 
         this.childComponents = { IconButton };
         this.childContexts = {
@@ -38,24 +40,6 @@ class TextMessage extends Component {
 
     displayOptions(e){
         console.log('displaying message options...');
-    }
-
-    formatTimeStamp(date){
-        let newDate = new Date(date);
-
-        if (isNaN(newDate.valueOf())){
-            return '';
-        }
-
-        let hours = newDate.getHours();
-        let minutes = newDate.getMinutes();
-        
-        let formatNumber = (num) => (num < 10) ? ('0' + num): num;
-        let formatedHours = formatNumber(hours);
-        let formatedMins = formatNumber(minutes);
-
-        let timeStr = formatedHours + ':' + formatedMins;
-        return timeStr;
     }
 
     updateDeliveryStatus(status){
@@ -73,7 +57,7 @@ class TextMessage extends Component {
 
     setTimeStamp(date){
         if (!this.ctx.timeStamp){
-            let time = this.formatTimeStamp(date);
+            let time = toHourMinuteFormat(date);
             let $time = this.$element.find('.text-message__time-wrapper time');
 
             $time.text(time);

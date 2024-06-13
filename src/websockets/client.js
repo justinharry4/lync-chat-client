@@ -6,6 +6,7 @@ import { clientStatus, serverStatus } from "./status.js";
 import { messageHandler, Dispatcher } from "./dispatch.js";
 import { MessageHandlerSet, AckHandlerSet } from "./handlers.js";
 
+import { MSG_FORMATS } from "../utils/utils.js";
 
 class WebSocketClient {
     constructor(url){   
@@ -113,7 +114,7 @@ class ChatInterface {
 
         let data = {
             'chat_id': chatId,
-            'content_format': 'TXT',
+            'content_format': MSG_FORMATS.TEXT,
             'content': text,
         };
 
