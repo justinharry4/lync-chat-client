@@ -63,6 +63,10 @@ class WebSocketClient {
     sendText(...args){
         return this.chat.sendText(...args);
     }
+
+    sendDeliveryStatusData(...args){
+        return this.chat.sendDeliveryStatusData(...args);
+    }
 }
 
 
@@ -131,6 +135,21 @@ class ChatInterface {
         };
 
         this.registry.set(key, initialState);
+    }
+
+    sendDeliveryStatusData(chatId, deliveryStatus){
+        let key = uuidv4();
+
+        let data = {
+            'chat_id': chatId,
+            'delivery_status': deliveryStatus,
+        }
+
+        let frame = new TextFrame(key, clientStatus.MESSAGE_STATUS, data);
+
+        this.client.ws.send(frame.data);
+
+        console.log(frame);
     }
 }
 

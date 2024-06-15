@@ -2,7 +2,7 @@ import Component from "../Component/Component.js";
 import SearchBox from "../SearchBox/SearchBox.js";
 import MessageBanner from "../MessageBanner/MessageBanner.js";
 
-import { toHourMinuteFormat, MSG_FORMATS } from "../../utils/utils.js";
+import { MSG_FORMATS, DELIVERY_STATUSES } from "../../utils/utils.js";
 
 import './MessageSection.css';
 
@@ -47,7 +47,7 @@ class MessageSection extends Component {
             $ul.append($listItem);
         }
 
-        console.log(this.tree);
+        this.updateUnreadMessagesDeliveryStatus(orderedBannerContexts);
     }
 
     sortBannerContexts(bannerContexts){
@@ -90,29 +90,27 @@ class MessageSection extends Component {
 
                 let bannerPhotoURL = await this.getPhotoUrl(profileId);
                 let { message, unreadCount } = await this.getBannerMessageData(pc);
-
-                console.log('last msg', message);
                 
                 let bannerCtx = {
                     photoUrl: bannerPhotoURL,
                     chatTitle: username,
-                    chatType: 'PC',
                     chatId: pc.id,
                     unreadCount: unreadCount,
                 }
 
                 if (message){
-                    let timeStamp = message['time_stamp'];
                     bannerCtx = {
                         ...bannerCtx,
+                        chatType: message['parent_chat_type'],
                         message: this.getMessageTextForm(message),
-                        timeStamp: timeStamp,
+                        timeStamp: message['time_stamp'],
                         status: message['delivery_status'],
                     }
                 } else {
                     const blank = ' ';
                     bannerCtx = {
                         ...bannerCtx,
+                        chatType: 'PC',
                         message: blank,
                         timeStamp: 1000,
                         status: blank,
@@ -155,8 +153,6 @@ class MessageSection extends Component {
         let currentChat = chatResponse.data;
         let chatId = currentChat.id;
 
-        console.log('in last message', currentChat);
-
         let message, unreadCount;
         if (chatId){
             let queryParamStr = '?category=unread';
@@ -168,12 +164,8 @@ class MessageSection extends Component {
             unreadCount = msgData['unread_count'];
             
             if (unreadCount > 0){
-                console.log('is unread');
-
                 message = msgData.results.slice(-1)[0];
             } else {
-                console.log('is initial');
-
                 let queryParamStr = '?category=iniital';
                 let initialURL = `/chat/privatechats/${pcId}/chats/${chatId}/messages/`;
                 let fullInitialURL = initialURL + queryParamStr;
@@ -206,90 +198,22 @@ class MessageSection extends Component {
         return text
     }
 
-    // async generateChildContexts(){
-    //     let chatData = await this.getChats();
-        
-    //     this.addChildContextGroup('chat', chatData);
-    // }
+    updateUnreadMessagesDeliveryStatus(bannerContexts){
+        let app = this.app;
 
-    // async getChats(){
-    //     let app = this.app;
-    //     let chatData = [];
+        for (let ctx of bannerContexts){
+            let wsClient;
 
-    //     try {
-    //         let privateChatsURL = '/chat/privatechats/';
-    //         let pcResponse = await app.axios.get(privateChatsURL);
-    //         let privateChats = pcResponse.data;
+            if (ctx.chatType == 'PC'){
+                wsClient = app.pcClient;
+            } else if (ctx.chatType == 'GC'){
+                wsClient = app.gcClient;
+            }
             
-    //         for (let pc of privateChats){
-    //             let participants = pc.participants;
-
-    //             let [userId] = participants
-    //                 .map((ppt) => ppt.user)
-    //                 .filter((id) => id != app.userId);
-                
-    //             let userURL = '/auth/users/' + userId + '/';
-    //             let userResponse = await app.axios.get(userURL);
-
-    //             let user = userResponse.data;
-    //             let username = user.username;
-    //             let profileId = user.profile;
-
-    //             let photoURL = '/chat/profiles/' + profileId + '/photo/';
-    //             let photoResponse = await app.axios.get(photoURL);
-    //             let [photo] = photoResponse.data;
-
-    //             let domain = app.axios.defaults.baseURL;
-    //             // let bannerPhotoPath = (photo) ? photo.image: defaultPhotoURL;
-    //             // let bannerPhotoURL = domain + bannerPhotoPath;
-    //             let bannerPhotoURL = (photo) ? domain + photo.image: defaultPhotoURL;
-                
-    //             let bannerCtx = {
-    //                 photoUrl: bannerPhotoURL,
-    //                 chatTitle: username,
-    //                 message: 'some text message',
-    //                 messageTime: '14:25',
-    //                 status: 'D',
-    //                 chatType: 'PC',
-    //                 chatId: pc.id,
-    //             }
-
-    //             chatData.push(bannerCtx);
-    //         }
-
-    //         return chatData;
-    //     } catch (error){
-    //         let response = error.response;
-
-    //         if (response && response.status == 401){
-    //             // this.app.handle401(response);
-    //         }
-    //         console.log(error);
-    //     };
-    // }
-
-    // viewOld(){
-    //     return `
-    //         <section id="msg-section">
-    //             <h1>Messages</h1>
-    //             <Component-lc lc--SearchBox:search--cl></Component-lc>
-    //             <div id="msg-section__pinned-msgs">
-    //             </div>
-    //             <div id="msg-section__all-msgs">
-    //                 <h2>All Messages</h2>
-    //                 <ul>
-    //                 ${this.autoSubCompIterStr('chat', (ctxName) => { 
-    //                 return `
-    //                     <li>
-    //                         <Component-lc lc--MessageBanner:${ctxName}--cl></Component-lc>
-    //                     </li>
-    //                 `
-    //                 })}
-    //                 </ul>
-    //             </div>
-    //         </section>
-    //     `
-    // }
+            let status = DELIVERY_STATUSES.DELIVERED
+            wsClient.sendDeliveryStatusData(ctx.chatId, status);
+        }
+    }
 
     view(){
         return `

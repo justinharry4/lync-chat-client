@@ -2,11 +2,7 @@ import { HandlerSet, messageHandler, ackHandler } from "./dispatch.js";
 import { serverStatus, clientStatus } from "./status.js";
 import protocol from "./protocol.js";
 
-// message delivery statuses (component)
-const MSG_IN_PROGRESS = 'P';
-const MSG_SENT = 'S';
-const MSG_DELIVERED = 'D';
-const MSG_VIEWED = 'V';
+import { DELIVERY_STATUSES } from "../utils/utils.js";
 
 
 class MessageHandlerSet extends HandlerSet {
@@ -72,7 +68,7 @@ class AckHandlerSet extends HandlerSet {
         let messageId = messageBody['message_id'];
         let timeStamp = messageBody['time_stamp'];
 
-        entry.component.updateDeliveryStatus(MSG_SENT);
+        entry.component.updateDeliveryStatus(DELIVERY_STATUSES.SENT);
         entry.component.setTimeStamp(timeStamp);
         entry.component.setId(messageId);
 

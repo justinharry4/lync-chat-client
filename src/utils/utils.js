@@ -18,6 +18,7 @@ function trim(str){
     return trimmedLines.join('\n');
 }
 
+// http request utilities
 function genericAJAXRequest(method, url, data){
     let promise = new Promise((resolve, reject) => {
         let jqXHR = $[method](url, data);
@@ -43,24 +44,26 @@ async function post(url, data){
     return result;
 }
 
-function validateDate(date){
-    if (isNaN(date.valueOf())){
-        throw new Error('Invalid Date object passed');
-    }
-}
-
+// generic utilities
 function zeroSingleDigitNumber(number){
     return (number < 10) ? ('0' + number): number;
 }
 
-function toHourMinuteFormat(datetimeStr){
+// datetime utilities
+function isValidDate(date){
+    if (isNaN(date.valueOf())){
+        return false
+    }
+
+    return true
+}
+
+function toHourMinuteFormat(datetimeStr, strict){
     let newDate = new Date(datetimeStr);
 
-    // if (isNaN(newDate.valueOf())){
-    //     return '';
-    // }
-
-    validateDate(newDate);
+    if (!isValidDate(newDate)){
+        return '';
+    }
 
     let hours = newDate.getHours();
     let minutes = newDate.getMinutes();
@@ -73,11 +76,12 @@ function toHourMinuteFormat(datetimeStr){
     return timeStr;
 }
 
-
 function toSlashedDayMonthYearFormat(datetimeStr){
     let date = new Date(datetimeStr);
 
-    validateDate(date);
+    if (!isValidDate(date)){
+        return '';
+    }
 
     let day = zeroSingleDigitNumber(date.getDate());
     let month = zeroSingleDigitNumber(date.getMonth() + 1);
@@ -85,7 +89,6 @@ function toSlashedDayMonthYearFormat(datetimeStr){
 
     return day + '/' + month + '/' + year;
 }
-
 
 const time = {};
 
@@ -178,11 +181,19 @@ class FormattedDate {
     // get yearsAgo(){}
 }
 
+// API specifications
 const MSG_FORMATS = {
     TEXT: 'TXT',
     IMAGE: 'IMG',
     AUDIO: 'AUD',
     VIDEO: 'VID',
+}
+
+const DELIVERY_STATUSES = {
+    IN_PROGRESS: 'P',
+    SENT: 'S',
+    DELIVERED: 'D',
+    VIEWED: 'V',
 }
 
 export { 
@@ -192,4 +203,5 @@ export {
     toHourMinuteFormat,
     toSlashedDayMonthYearFormat,
     MSG_FORMATS,
+    DELIVERY_STATUSES,
 };
