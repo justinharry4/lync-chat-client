@@ -20,6 +20,8 @@ class App {
             baseURL: apiHttpDomain,
         });
 
+        this.componentIdCount = 0;
+    
         this.setDefaultAuthHeader();
     }
 
@@ -79,6 +81,11 @@ class App {
         localStorage.setItem('refreshToken', tokens.refresh);
 
         this.setDefaultAuthHeader();
+    }
+
+    generateComponentId(){
+        this.componentIdCount += 1;
+        return this.componentIdCount;
     }
 }
 

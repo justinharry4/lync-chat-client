@@ -6,6 +6,7 @@ class Component {
         this.ctx = context;
         this.state = {};
         this.tree = new ComponentTree(this);
+        this.id = app.generateComponentId();
         
         this.extendContext();
     }
@@ -103,8 +104,29 @@ class Component {
         this.$element = $fullComponent;
 
         await this.postRender()
-
+        
         return this.$element;
+    }
+
+    remove(){
+        let parentMember = this.tree.parent();
+        let parentCmp = parentMember.cmp;
+
+        parentCmp.tree.removeChild(this);
+        this.tree.removeParent();
+
+        this.$element.remove();
+    }
+
+    add(childCmp, baseElement){
+        // this method is used to add components, which have been previously
+        // removed from the component tree, back to the tree
+
+        childCmp.tree.setParent(this);
+        this.tree.addChild(childCmp);
+
+        let parentElement = baseElement || this.$element;
+        parentElement.append(childCmp.$element);
     }
 }
 
@@ -126,10 +148,26 @@ class ComponentTree {
         }
     }
 
+    removeParent(){
+        this._parent = null;
+    }
+
     addChild(childCmp){
         if (this.isComponent(childCmp)){
             let member = new ComponentTreeMember(childCmp);
             this._children.push(member);
+        }
+    }
+
+    removeChild(childCmp){
+        
+        let index = this._children.findIndex((member, idx) => {
+            let ret = member.cmp.id === childCmp.id;
+            return ret;
+        });
+        
+        if (index !== -1){
+            let x = this._children.splice(index, 1);
         }
     }
 
@@ -149,9 +187,17 @@ class ComponentTree {
     }
 
     children(type){
-        if (!type){
-            return this._children;
+        if (type){
+            let targetMembers = [];
+            for (let member of this._children){
+                if (member.type === type){
+                    targetMembers.push(member);
+                }
+            }
+
+            return targetMembers;
         } else {
+            return this._children;
         }
     }
 
