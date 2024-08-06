@@ -80,7 +80,7 @@ class Router {
         
         let page = new pageClass(this.app);
         page.renderPage();
-        // this.app.setPage(page);
+        this.app.setPage(page);
     }
 
     async redirect(url){

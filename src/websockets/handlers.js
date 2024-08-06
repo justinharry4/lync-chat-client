@@ -14,10 +14,13 @@ class MessageHandlerSet extends HandlerSet {
             let $chatbox = $('#chatbox');
             let $messageSection = $('#msg-section');
 
+            let chatType = messageBody['chat_type'];
+            let chatId = messageBody['chat_id'];
+
             let event = $.Event('le-newChatMessage');
             event.context = {
-                chatType: messageBody['chat_type'],
-                chatId: messageBody['chat_id'],
+                chatType: chatType,
+                chatId: chatId,
                 messageId: messageBody['message_id'],
                 format: messageBody['content_format'],
                 text: messageBody['content'],
@@ -25,12 +28,30 @@ class MessageHandlerSet extends HandlerSet {
             }
 
             $messageSection.trigger(event);
+            
+            let status = DELIVERY_STATUSES.DELIVERED;
 
             if ($chatbox.length != 0){
                 $chatbox.trigger(event);
+
+                let page = this.interface.client.app.page;
+
+                for (let member of page.tree.children()){
+                    if (member.type == 'ChatBox'){
+                        let chatbox = member.cmp;
+                        
+                        if (chatbox.ctx.chatId == chatId &&
+                            chatbox.ctx.chatType == chatType)
+                        {
+                            status = DELIVERY_STATUSES.VIEWED;
+                        }
+                        break;
+                    }
+                }
             }
 
-            this.interface.sendAck(key, statusCode);
+            let ackData = {'delivery_status': status};
+            this.interface.sendAck(key, statusCode, ackData);
         }
     )
 

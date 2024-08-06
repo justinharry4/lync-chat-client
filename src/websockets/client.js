@@ -9,7 +9,8 @@ import { MessageHandlerSet, AckHandlerSet } from "./handlers.js";
 import { MSG_FORMATS } from "../utils/utils.js";
 
 class WebSocketClient {
-    constructor(url){   
+    constructor(app, url){   
+        this.app = app
         this.url = url;
 
         this.binaryType = 'arraybuffer';
@@ -148,8 +149,6 @@ class ChatInterface {
         let frame = new TextFrame(key, clientStatus.MESSAGE_STATUS, data);
 
         this.client.ws.send(frame.data);
-
-        // console.log(frame);
     }
 }
 

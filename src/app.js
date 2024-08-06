@@ -29,7 +29,7 @@ class App {
     async initialize(){
         let token = localStorage.getItem('accessToken');
 
-        this.pcClient = new WebSocketClient(apiWSPrivateURL);
+        this.pcClient = new WebSocketClient(this, apiWSPrivateURL);
 
         if (!token) {
             this.isAuth = false;
