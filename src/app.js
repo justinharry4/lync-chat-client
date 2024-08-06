@@ -12,6 +12,7 @@ const apiWSGroupURL = 'ws://localhost:8000/chat/groupchats/';
 class App {
     constructor(){
         this.router = new Router(this);
+        this.page = null;
 
         this.isAuth = false;
         this.userId = null;
@@ -86,6 +87,10 @@ class App {
     generateComponentId(){
         this.componentIdCount += 1;
         return this.componentIdCount;
+    }
+
+    setPage(page){
+        this.page = page;
     }
 }
 

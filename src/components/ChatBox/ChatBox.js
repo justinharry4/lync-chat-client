@@ -151,6 +151,8 @@ class ChatBox extends Component {
 
             $messageBox.append($textMessage);
         }
+
+        this.updateViewedMessagesDeliveryStatus();
     }
 
     async fetchInitialMessages(){
@@ -218,6 +220,20 @@ class ChatBox extends Component {
         }
 
         return messageContexts;
+    }
+
+    updateViewedMessagesDeliveryStatus(){
+        let app = this.app;
+        let wsClient;
+
+        if (this.ctx.chatType == 'PC'){
+            wsClient = app.pcClient;
+        } else if (this.ctx.chatType == 'GC'){
+            wsClient = app.gcClient;
+        }
+        
+        let status = DELIVERY_STATUSES.VIEWED;
+        wsClient.sendDeliveryStatusData(this.ctx.chatId, status);
     }
 
     view(){

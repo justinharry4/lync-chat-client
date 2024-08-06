@@ -149,7 +149,7 @@ class ChatInterface {
 
         this.client.ws.send(frame.data);
 
-        console.log(frame);
+        // console.log(frame);
     }
 }
 
