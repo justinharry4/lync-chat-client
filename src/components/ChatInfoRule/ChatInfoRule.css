@@ -1,7 +1,6 @@
-/* @charset "utf-8";
+@charset "utf-8";
 
-.date-rule {
-    border: 1px solid red;
+.chatinfo-rule {
     font-size: .7em;
     text-align: center;
     color: var(--lynclightgrey);
@@ -9,16 +8,15 @@
     margin: 1.2em 0em;
 }
 
-.date-rule span {
+.chatinfo-rule span {
     background-color: var(--darkmode-black);
     padding: 0em 1.5em;
 }
 
-.date-rule hr {
+.chatinfo-rule hr {
     position: absolute;
     width: 100%;
     border-color: #ffffff25;
-    border-color: blue;
     top: 50%;
     z-index: -1;
-} */
+}

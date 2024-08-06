@@ -44,6 +44,16 @@ async function post(url, data){
     return result;
 }
 
+async function getCurrentChatId(app, pcId){
+    let currentChatURL = `/chat/privatechats/${pcId}/chats/current/`;
+
+    let chatResponse = await app.axios.get(currentChatURL);
+    let currentChat = chatResponse.data;
+    let chatId = currentChat.id;
+
+    return chatId;
+}
+
 // generic utilities
 function zeroSingleDigitNumber(number){
     return (number < 10) ? ('0' + number): number;
@@ -199,6 +209,7 @@ const DELIVERY_STATUSES = {
 export { 
     get,
     post,
+    getCurrentChatId,
     FormattedDate,
     toHourMinuteFormat,
     toSlashedDayMonthYearFormat,

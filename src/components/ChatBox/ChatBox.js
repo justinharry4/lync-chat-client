@@ -3,8 +3,9 @@ import ChatHeader from "../ChatHeader/ChatHeader.js";
 import DateRule from "../DateRule/DateRule.js";
 import TextMessage from "../TextMessage/TextMessage.js";
 import MessageForm from "../MessageForm/MessageForm.js";
+import ChatInfoRule from "../ChatInfoRule/ChatInfoRule.js";
 
-import { MSG_FORMATS } from "../../utils/utils.js";
+import { MSG_FORMATS, DELIVERY_STATUSES, getCurrentChatId } from "../../utils/utils.js";
 
 import './ChatBox.css';
 
@@ -22,9 +23,7 @@ class ChatBox extends Component {
 
         this.childComponents = { 
             ChatHeader,
-            DateRule,
             MessageForm,
-            TextMessage,
         };
         this.childContexts = {
             header: {
@@ -126,6 +125,101 @@ class ChatBox extends Component {
         }
     }
 
+    async postRender(){
+        let app = this.app;
+        let { messages, unreadCount } = await this.fetchInitialMessages();
+
+        this.tagFirstNewMessage(messages);
+
+        let messageContexts = this.getMessageContexts(messages);
+        let $messageBox = this.$element.find('.message-box');
+
+        for (let ctx of messageContexts){
+            if (unreadCount > 0 && ctx.isTagged){
+                let ruleCtx = {
+                    text: unreadCount + ' UNREAD MESSAGES',
+                }
+
+                let newMsgRule = new ChatInfoRule(app, ruleCtx);
+                let $newMsgRule = await newMsgRule.render(this);
+
+                $messageBox.append($newMsgRule);
+            }
+
+            let textMessage = new TextMessage(app, ctx);
+            let $textMessage = await textMessage.render(this);
+
+            $messageBox.append($textMessage);
+        }
+    }
+
+    async fetchInitialMessages(){
+        let app = this.app;
+        let pcId = this.ctx.chatId;
+        
+        let chatId = await getCurrentChatId(app, pcId);
+
+        console.log('chatId', chatId);
+
+        if (!chatId){
+            return null;
+        }
+
+        let url = `/chat/privatechats/${pcId}/chats/${chatId}/messages/`;
+        let queryParam = '?category=initial';
+        let fullURL = url + queryParam;
+        let response = await app.axios.get(fullURL);
+        let responseData = response.data;
+
+        let unreadCount = responseData['unread_count'];
+        let messages = responseData.results;
+
+        console.log('messages res', responseData);
+
+        return { messages, unreadCount };
+    }
+
+    tagFirstNewMessage(messages){
+        let statuses = [DELIVERY_STATUSES.SENT, DELIVERY_STATUSES.DELIVERED];
+
+        for (let message of messages){
+            let isSenderSelf = message.sender === this.app.userId;
+            let isNotViewed = statuses.includes(message['delivery_status']);
+
+            if (!isSenderSelf && isNotViewed){
+                message.isTagged = true;
+                break;
+            }
+        }
+
+        return messages;
+    }
+
+    getMessageContexts(messages){
+        let messageContexts = [];
+
+        for (let message of messages){
+            let isSenderSelf = message.sender === this.app.userId;
+
+            let messageCtx = {
+                text: message.content.text,
+                timeStamp: message['time_stamp'],
+                chatType: this.ctx.chatType,
+                isSenderSelf: isSenderSelf,
+                serverId: message.id,
+                isTagged: message.isTagged,
+            }
+
+            if (isSenderSelf){
+                messageCtx.status = message['delivery_status']
+            }
+
+            messageContexts.push(messageCtx);
+        }
+
+        return messageContexts;
+    }
+
     view(){
         return `
             <section
@@ -133,9 +227,7 @@ class ChatBox extends Component {
                 lf--le-submitMessage:handleMessageSubmit|le-newChatMessage:handleNewMessage|le-status:handleMessageDeliveryStatusUpdate--fl
             >
                 <Component-lc lc--ChatHeader:header--cl></Component-lc>
-                <div class="message-box">
-                    <Component-lc lc--DateRule:date--cl></Component-lc>
-                </div>
+                <div class="message-box"></div>
                 <Component-lc lc--MessageForm:msgForm--cl></Component-lc>
             </section>
         `

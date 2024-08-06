@@ -33,8 +33,7 @@ class Chat extends Page {
         let ctx = e.context.ctx;
 
         let activeChatboxMember = this.tree.children('ChatBox')[0];
-        console.log('active cb member', activeChatboxMember);
-
+    
         if (activeChatboxMember){
             let activeChatbox = activeChatboxMember.cmp;
 
@@ -47,15 +46,6 @@ class Chat extends Page {
         } else {
             await this.displayChatbox(ctx);
         }
-
-        // let $poster = $page.find('#brand-poster');
-        // $poster.remove();
-
-        // let chatbox = new ChatBox(this.app, ctx);
-        // let $chatbox = await chatbox.render(this);
-        // $page.append($chatbox);
-
-        console.log('background', this.backgroundChatboxes);
     }
 
     getBackgroundChatbox(ctx){
@@ -82,8 +72,6 @@ class Chat extends Page {
 
         let [bgChatbox, index] = this.getBackgroundChatbox(ctx);
         if (bgChatbox){
-            console.log('redisplaying background chatbox');
-
             this.add(bgChatbox, this.$element);
             this.backgroundChatboxes.splice(index, 1);
         } else {
