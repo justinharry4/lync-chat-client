@@ -1,6 +1,6 @@
 import Component from "../Component/Component.js";
 
-import { toHourMinuteFormat, toSlashedDayMonthYearFormat } from "../../utils/utils.js"
+import { DELIVERY_STATUSES, toHourMinuteFormat, toSlashedDayMonthYearFormat } from "../../utils/utils.js"
 
 import './MessageBanner.css';
 
@@ -54,6 +54,17 @@ class MessageBanner extends Component {
         }
 
         return prefix + suffix;
+    }
+
+    setReadState(){
+        this.ctx.status = DELIVERY_STATUSES.VIEWED;
+        this.ctx.unreadCount = 0;
+
+        let $span = this.$element.find('.msg-banner__msg-wrapper span:last-child');
+
+        $span.removeClass('msg-banner__msg-count');
+        $span.addClass('msg-banner__msg-status');
+        $span.text(this.ctx.status);
     }
 
     view(){

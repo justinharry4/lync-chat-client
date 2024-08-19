@@ -8,3 +8,4 @@ le-validInput -- emitted when data validation is successful -- form-related elem
 le-openChatBox -- emitted when an active chatbox is to be displayed -- Chat (page)
 le-newChatMessage -- emitted when a new chat message is received or sent -- ChatBox, MessageBanner
 le-status -- emitted when a new delivery status message is received -- ChatBox
+le-viewedMessage -- emitted when unread messages have been viewed -- MessageSection

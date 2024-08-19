@@ -59,6 +59,10 @@ function zeroSingleDigitNumber(number){
     return (number < 10) ? ('0' + number): number;
 }
 
+function singularOrPlural(num, sing, plural){
+    return (num > 1 || num == 0) ? plural: sing;
+}
+
 // datetime utilities
 function isValidDate(date){
     if (isNaN(date.valueOf())){
@@ -215,4 +219,5 @@ export {
     toSlashedDayMonthYearFormat,
     MSG_FORMATS,
     DELIVERY_STATUSES,
+    singularOrPlural,
 };

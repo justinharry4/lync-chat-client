@@ -27,6 +27,12 @@ class MessageSection extends Component {
         }
     }
 
+    contextMethods(){
+        return [ 
+            this.handleMessageRead,
+        ];
+    }
+
     submitSearch(e){
         e.preventDefault();
         console.log('search submitted!');
@@ -215,9 +221,29 @@ class MessageSection extends Component {
         }
     }
 
+    handleMessageRead(e){
+        let chatId = e.context.chatId;
+        let chatType = e.context.chatType;
+
+        for (let member of this.tree.children()){
+            if (member.type == 'MessageBanner'){
+                let cmp = member.cmp;
+                
+                if (cmp.ctx.chatId == chatId &&
+                    cmp.ctx.chatType == chatType &&
+                    cmp.ctx.unreadCount > 0)
+                {
+                    console.log('banner found');
+
+                    cmp.setReadState();
+                }
+            }
+        }
+    }
+
     view(){
         return `
-            <section id="msg-section">
+            <section id="msg-section" lf--le-viewedMessage:handleMessageRead--fl>
                 <div id="msg-section__top-container">
                     <h1>Messages</h1>
                     <Component-lc lc--SearchBox:search--cl></Component-lc>

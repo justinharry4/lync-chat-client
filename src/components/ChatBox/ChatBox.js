@@ -5,7 +5,7 @@ import TextMessage from "../TextMessage/TextMessage.js";
 import MessageForm from "../MessageForm/MessageForm.js";
 import ChatInfoRule from "../ChatInfoRule/ChatInfoRule.js";
 
-import { MSG_FORMATS, DELIVERY_STATUSES, getCurrentChatId } from "../../utils/utils.js";
+import { MSG_FORMATS, DELIVERY_STATUSES, getCurrentChatId, singularOrPlural } from "../../utils/utils.js";
 
 import './ChatBox.css';
 
@@ -136,8 +136,9 @@ class ChatBox extends Component {
 
         for (let ctx of messageContexts){
             if (unreadCount > 0 && ctx.isTagged){
+                let msgText = singularOrPlural(unreadCount, 'MESSAGE', 'MESSAGES');
                 let ruleCtx = {
-                    text: unreadCount + ' UNREAD MESSAGES',
+                    text: unreadCount + ' UNREAD ' + msgText,
                 }
 
                 let newMsgRule = new ChatInfoRule(app, ruleCtx);
@@ -153,6 +154,16 @@ class ChatBox extends Component {
         }
 
         this.updateViewedMessagesDeliveryStatus();
+
+        let $messageSection = $('#msg-section');
+
+        let event = $.Event('le-viewedMessage');
+        event.context = { 
+            chatId: this.ctx.chatId,
+            chatType: this.ctx.chatType
+        };
+
+        $messageSection.trigger(event);
     }
 
     async fetchInitialMessages(){
@@ -237,17 +248,24 @@ class ChatBox extends Component {
     }
 
     view(){
+        let le1 = 'le-submitMessage:handleMessageSubmit';
+        let le2 = 'le-newChatMessage:handleNewMessage';
+        let le3 = 'le-status:handleMessageDeliveryStatusUpdate';
+        let lfStr = `lf--${le1}|${le2}|${le3}--fl`
+
         return `
             <section
                 id="chatbox"
-                lf--le-submitMessage:handleMessageSubmit|le-newChatMessage:handleNewMessage|le-status:handleMessageDeliveryStatusUpdate--fl
+                ${lfStr}
             >
                 <Component-lc lc--ChatHeader:header--cl></Component-lc>
                 <div class="message-box"></div>
                 <Component-lc lc--MessageForm:msgForm--cl></Component-lc>
             </section>
         `
+        // lf--le-submitMessage:handleMessageSubmit|le-newChatMessage:handleNewMessage|le-status:handleMessageDeliveryStatusUpdate--fl
     }
+
 }
 
 export default ChatBox;
