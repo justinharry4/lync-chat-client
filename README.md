@@ -59,6 +59,8 @@ Messages can then be sent to the other user using the chatbox interface.
 Log in with the other user's credentials in a different browser window and open
 the chatbox as before to see the messages appear in real-time.
 
+The Login and Chat pages are shown below:
+
 [![Login page screenshot](https://github.com/justinharry4/lync-chat-client/blob/main/public/images/raster/login_screenshot.png?raw=true)](https://github.com/justinharry4/lync-chat-client/blob/main/public/images/raster/login_screenshot.png)
 
 
