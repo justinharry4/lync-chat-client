@@ -42,7 +42,6 @@ class App {
                 this.userId = userId;
             } catch (error){
                 if (error instanceof AccessTokenError){
-                    // 
                 }
             }
         }

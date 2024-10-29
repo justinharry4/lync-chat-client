@@ -51,13 +51,13 @@ class MessageForm extends Component {
         
         if (message){
             let $chatbox = $form.closest('#chatbox');
+            let $textInput = $form.find('input[type=text]');
     
             let event = $.Event('le-submitMessage');
             event.context = { text: message };
     
             $chatbox.trigger(event);
-            
-            console.log('submitting message...');
+            $textInput.val('');
         }
     }
 
@@ -68,7 +68,6 @@ class MessageForm extends Component {
 
         if (badStates.includes(ws.readyState)){
             pcClient.reconnect();
-            console.log('reconnecting....');
         }
     }
 

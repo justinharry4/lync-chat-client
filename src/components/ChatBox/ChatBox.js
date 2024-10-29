@@ -36,6 +36,9 @@ class ChatBox extends Component {
                 chatType: this.ctx.chatType,
             }
         };
+
+        this.topBlankMessage = null;
+        this.bottomBlankMessage = null;
     }
 
     contextMethods(){
@@ -43,6 +46,7 @@ class ChatBox extends Component {
             this.handleMessageSubmit,
             this.handleNewMessage,
             this.handleMessageDeliveryStatusUpdate,
+            this.handleMessageBoxScroll,
         ];
     }
 
@@ -93,7 +97,6 @@ class ChatBox extends Component {
                 let $textMessage = await textMessage.render(this);
 
                 this.displayNewMessage($textMessage);
-                console.log('new message displayed');
             }
         }
     }
@@ -129,50 +132,21 @@ class ChatBox extends Component {
         let app = this.app;
         let { messages, unreadCount } = await this.fetchInitialMessages();
 
-        this.tagFirstNewMessage(messages);
+        // this.setOlderMessagesHook();
 
-        let messageContexts = this.getMessageContexts(messages);
-        let $messageBox = this.$element.find('.message-box');
+        this.renderTextMessages(messages, unreadCount);
 
-        for (let ctx of messageContexts){
-            if (unreadCount > 0 && ctx.isTagged){
-                let msgText = singularOrPlural(unreadCount, 'MESSAGE', 'MESSAGES');
-                let ruleCtx = {
-                    text: unreadCount + ' UNREAD ' + msgText,
-                }
-
-                let newMsgRule = new ChatInfoRule(app, ruleCtx);
-                let $newMsgRule = await newMsgRule.render(this);
-
-                $messageBox.append($newMsgRule);
-            }
-
-            let textMessage = new TextMessage(app, ctx);
-            let $textMessage = await textMessage.render(this);
-
-            $messageBox.append($textMessage);
-        }
+        // this.setNewerMessagesHook();
 
         this.updateViewedMessagesDeliveryStatus();
 
-        let $messageSection = $('#msg-section');
-
-        let event = $.Event('le-viewedMessage');
-        event.context = { 
-            chatId: this.ctx.chatId,
-            chatType: this.ctx.chatType
-        };
-
-        $messageSection.trigger(event);
+        this.triggerViewedMessageEvent();
     }
 
     async fetchInitialMessages(){
         let app = this.app;
         let pcId = this.ctx.chatId;
-        
         let chatId = await getCurrentChatId(app, pcId);
-
-        console.log('chatId', chatId);
 
         if (!chatId){
             return null;
@@ -187,20 +161,24 @@ class ChatBox extends Component {
         let unreadCount = responseData['unread_count'];
         let messages = responseData.results;
 
-        console.log('messages res', responseData);
-
         return { messages, unreadCount };
     }
 
-    tagFirstNewMessage(messages){
+    tagMessages(messages){
         let statuses = [DELIVERY_STATUSES.SENT, DELIVERY_STATUSES.DELIVERED];
+
+        let firstMessage = messages[0];
+        let lastMessage = messages.slice(-1)[0];
+
+        firstMessage.isFirst = true;
+        lastMessage.isLast = true;
 
         for (let message of messages){
             let isSenderSelf = message.sender === this.app.userId;
             let isNotViewed = statuses.includes(message['delivery_status']);
 
             if (!isSenderSelf && isNotViewed){
-                message.isTagged = true;
+                message.isFirstNew = true;
                 break;
             }
         }
@@ -220,7 +198,9 @@ class ChatBox extends Component {
                 chatType: this.ctx.chatType,
                 isSenderSelf: isSenderSelf,
                 serverId: message.id,
-                isTagged: message.isTagged,
+                isFirst: message.isFirst,
+                isFirstNew: message.isFirstNew,
+                isLast: message.isLast,
             }
 
             if (isSenderSelf){
@@ -231,6 +211,52 @@ class ChatBox extends Component {
         }
 
         return messageContexts;
+    }
+
+    async renderTextMessages(messages, unreadCount){
+        let app = this.app; 
+
+        this.tagMessages(messages);
+
+        let messageContexts = this.getMessageContexts(messages);
+        let $messageBox = this.$element.find('.message-box');
+
+        let $firstNewMessage;
+        let $lastMessage;
+
+        for (let ctx of messageContexts){
+            if (unreadCount > 0 && ctx.isFirstNew){
+                let msgText = singularOrPlural(unreadCount, 'MESSAGE', 'MESSAGES');
+                let ruleCtx = {
+                    text: unreadCount + ' UNREAD ' + msgText,
+                }
+
+                let newMsgRule = new ChatInfoRule(app, ruleCtx);
+                let $newMsgRule = await newMsgRule.render(this);
+
+                $messageBox.append($newMsgRule);
+            }
+
+            let textMessage = new TextMessage(app, ctx);
+            let $textMessage = await textMessage.render(this);
+
+            $messageBox.append($textMessage);
+
+            if (ctx.isFirstNew){
+                $firstNewMessage = $textMessage;
+            }
+            if (ctx.isLast){
+                $lastMessage = $textMessage;
+            }
+        }
+
+        if ($firstNewMessage){
+            let firstNewEl = $firstNewMessage.get(0);
+            firstNewEl.scrollIntoView({ behavior: 'instant', block: 'center' });
+        } else if ($lastMessage){
+            let lastEl = $lastMessage.get(0);
+            lastEl.scrollIntoView({ behavior: 'smooth', block: 'end' });
+        }
     }
 
     updateViewedMessagesDeliveryStatus(){
@@ -247,6 +273,28 @@ class ChatBox extends Component {
         wsClient.sendDeliveryStatusData(this.ctx.chatId, status);
     }
 
+    triggerViewedMessageEvent(){
+        let $messageSection = $('#msg-section');
+
+        let event = $.Event('le-viewedMessage');
+        event.context = { 
+            chatId: this.ctx.chatId,
+            chatType: this.ctx.chatType
+        };
+
+        $messageSection.trigger(event);
+    }
+
+    handleMessageBoxScroll(e){
+        let active = false;
+        let interval = 5 * 1000;
+
+        setInterval(() => {
+            if (active){
+            }
+        }, interval)
+    }
+
     view(){
         let le1 = 'le-submitMessage:handleMessageSubmit';
         let le2 = 'le-newChatMessage:handleNewMessage';
@@ -259,11 +307,10 @@ class ChatBox extends Component {
                 ${lfStr}
             >
                 <Component-lc lc--ChatHeader:header--cl></Component-lc>
-                <div class="message-box"></div>
+                <div class="message-box" lf--scroll:handleMessageBoxScroll--fl></div>
                 <Component-lc lc--MessageForm:msgForm--cl></Component-lc>
             </section>
         `
-        // lf--le-submitMessage:handleMessageSubmit|le-newChatMessage:handleNewMessage|le-status:handleMessageDeliveryStatusUpdate--fl
     }
 
 }

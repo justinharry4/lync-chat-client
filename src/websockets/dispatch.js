@@ -47,11 +47,9 @@ class Dispatcher {
         let header = message.header;
         let statusCode = header['status_code'];
 
-        // console.log('all', this.handlers);
         for (let handler of this.handlers){
             if (handler.allowedCodes.includes(statusCode)){
                 try {
-                    // console.log('allowed', handler.allowedCodes);
                     handler(header.key, statusCode, message.body);
                     break;
                 } catch (err){

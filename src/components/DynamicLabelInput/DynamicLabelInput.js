@@ -49,11 +49,6 @@ class DynamicLabelInput extends Input {
     }
 
     handleError(e){
-        // let value = $(e.target).find('input').val();
-        // let inputCtx = this.childContexts.input;
-
-        // this.childContexts.input = {...inputCtx, value: value}
-        // this.changeState({error: true});
         let html = `<div class="dynamic-label__error-text">Invalid Input!</div>`;
 
         this.$element.addClass('error');
@@ -61,13 +56,6 @@ class DynamicLabelInput extends Input {
     }
 
     clearError(e){
-        // let value = this.$element.find('input').val();
-        // let inputCtx = this.childContexts.input;
-        
-        // this.childContexts.input = {...inputCtx, value: value}
-        // if (this.state.error){
-        //     this.changeState({error:false});
-        // }
         let errorDiv = this.$element.find('.dynamic-label__error-text');
 
         this.$element.removeClass('error');

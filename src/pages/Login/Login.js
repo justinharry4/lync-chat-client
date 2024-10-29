@@ -122,9 +122,6 @@ class Login extends Page {
                         </div>
                         <Component-lc lc--Button:submit--cl id="login__submit"></Component-lc>
                     </form>
-                    <div id="login__link-wrapper">
-                        <a href="/signup" id="login__signup-link">Sign Up</a>
-                    </div>
                 </div>
             </div>
         `

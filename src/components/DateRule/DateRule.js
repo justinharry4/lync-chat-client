@@ -35,15 +35,6 @@ class DateRule extends Component {
             <Component-lc lc--ChatInfoRule:rule--cl></Component-lc>
         `
     }
-
-    // view(){
-    //     return `
-    //         <div class="date-rule">
-    //             <hr>
-    //             <span>${this.formatDate(this.ctx.date)}</span>
-    //         </div>
-    //     `
-    // }
 }
 
 export default DateRule;

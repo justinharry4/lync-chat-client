@@ -22,67 +22,6 @@ class Component {
         this.ctx = {...this.ctx, ...extension};
     }
 
-    async generateChildContexts(){}
-
-    iterStr(iterable, fn, mode='o'){
-        // modes: o => for of, i => for in, e => for each
-        let templateStr = '';
-
-        if (mode === 'o'){
-            for (let entry of iterable){
-                templateStr += fn(entry, iterable) + '\n';
-            }
-        }
-
-        return templateStr;
-    }
-
-    autoSubCompIterStr(prefix, fn){
-        let iterable = this.getChildContextGroupNames(prefix);
-
-        return this.iterStr(iterable, fn);
-    }
-
-    addChildContextGroup(prefix, arr){
-        let contextGroup = {};
-        for (let [idx, entry] of arr.entries()){
-            let propName = prefix + '_' + idx;
-            contextGroup[propName] = entry;
-        }
-
-        this.childContexts = { ...this.childContexts, ...contextGroup };
-    }
-
-    getChildContextGroupNames(prefix){
-        let propNames = [];
-
-        for (let propName in this.childContexts){
-            let [frag1, frag2] = propName.split('_');
-            if (frag1 === prefix && !isNaN(frag2)){
-                propNames.push(propName);
-            }
-        }
-
-        return propNames;
-    }
-
-    changeState(obj){
-        this.state = {...this.state, ...obj};
-        this.refresh();
-    }
-
-    async refresh(){
-        let $oldElement = this.$element;
-
-        let $newElement = await this.render();
-        // console.log('new', $newElement.parent());
-        // console.log('old', $oldElement);
-        // console.log('new', $newElement);
-        $oldElement.replaceWith($newElement);
-
-        // this.$element = $newElement;
-    }
-
     viewPromise(){
         return new Promise((resolve, reject) => {
             resolve(this.view());
@@ -94,8 +33,6 @@ class Component {
     async postRender(){}
 
     async render(parent){
-        await this.generateChildContexts();
-        
         await this.preRender()
 
         let view = new View(this);
@@ -143,7 +80,6 @@ class ComponentTree {
         if (!this.parent()){
             if (this.isComponent(parentCmp)){
                 this._parent = new ComponentTreeMember(parentCmp);
-                // console.log('parent set', parentCmp);
             }
         }
     }
@@ -172,7 +108,6 @@ class ComponentTree {
     }
 
     isComponent(cmp){
-        // console.log(cmp instanceof Component);
         if (cmp instanceof Component){
             return true;
         } else {
@@ -202,7 +137,6 @@ class ComponentTree {
     }
 
     descendants(type){
-        // desc code
     }
 }
 

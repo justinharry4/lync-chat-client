@@ -1,7 +1,7 @@
 @charset "utf-8";
 
 #chatbox {
-    width: 35em;
+    /* width: 35em; */
     /* border: 1px solid red; */
     display: flex;
     flex-direction: column;

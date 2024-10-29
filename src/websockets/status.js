@@ -1,9 +1,5 @@
 const clientStatus = {
     // client codes (no error)
-    // HEAD_TEXT_EOC: 701,
-    // HEAD_TEXT_MCE: 711,
-    // MORE_TEXT_EOC: 702,
-    // MORE_TEXT_MCE: 712,
     TEXT_DATA: 701,
     FILE_METADATA: 722,
     HEAD_FILE_EOC: 703,
@@ -20,11 +16,6 @@ const clientStatus = {
 }
 
 const serverStatus = {
-    // server codes (no error)
-    // HEAD_TEXT_EOC: 601,
-    // HEAD_TEXT_MCE: 611,
-    // MORE_TEXT_EOC: 602,
-    // MORE_TEXT_MCE: 612,
     TEXT_DATA: 601,
     FILE_DATA: 622,
     ACKNOWLEDGMENT: 623,

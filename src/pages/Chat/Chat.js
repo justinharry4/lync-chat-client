@@ -29,7 +29,6 @@ class Chat extends Page {
     }
 
     async handleOpenChatBox(e){
-        // let $page = $(e.target);
         let ctx = e.context.ctx;
 
         let activeChatboxMember = this.tree.children('ChatBox')[0];

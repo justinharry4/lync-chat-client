@@ -21,12 +21,13 @@ class TextMessage extends Component {
         chatType: null,
         isSenderSelf: null,
         serverId: null,
+        isBlank: null,
+        isTop: null,
+        isBottom: null,
     }
 
     constructor(...args){
         super(...args);
-
-        this.ctx.timeStamp = toHourMinuteFormat(this.ctx.timeStamp);
 
         this.childComponents = { IconButton };
         this.childContexts = {
@@ -36,10 +37,17 @@ class TextMessage extends Component {
                 type: 'button',
             }
         }
+
+        if (this.ctx.isBlank){
+            this.ctx.text = '';
+            this.ctx.timeStamp = '';
+            this.ctx.status = '';
+        } else {
+            this.ctx.timeStamp = toHourMinuteFormat(this.ctx.timeStamp);
+        }
     }
 
     displayOptions(e){
-        console.log('displaying message options...');
     }
 
     updateDeliveryStatus(status){
@@ -65,9 +73,24 @@ class TextMessage extends Component {
         }
     }
 
+    getScrollAction(){
+        if (this.ctx.isTop){
+            // check if blank is in view
+        } else if (this.ctx.isBottom){
+            // check if blank is in view
+        }
+
+        return { next: false , prev: false };
+    }
+
     view(){
+        let class1 = 'text-message';
+        let class2 = (this.ctx.isSenderSelf) ? 'self': 'other';
+        let class3 = (this.ctx.isBlank) ? 'blank': '';
+        let classStr = `${class1} ${class2} ${class3}`
+
         return `
-            <div class="text-message ${(this.ctx.isSenderSelf) ? 'self': 'other'}">
+            <div class="${classStr}">
                 ${(this.ctx.chatType == 'GC') ? `
                     <div class="text-message__photo-wrapper">
                         <img src="${this.ctx.photoUrl}" alt="">

@@ -82,7 +82,6 @@ function toHourMinuteFormat(datetimeStr, strict){
     let hours = newDate.getHours();
     let minutes = newDate.getMinutes();
     
-    // let formatNumber = (num) => (num < 10) ? ('0' + num): num;
     let formatedHours = zeroSingleDigitNumber(hours);
     let formatedMins = zeroSingleDigitNumber(minutes);
 
@@ -189,10 +188,6 @@ class FormattedDate {
             }
         }
     }
-
-    // get daysAgo(){}
-    // get monthsAgo(){}
-    // get yearsAgo(){}
 }
 
 // API specifications

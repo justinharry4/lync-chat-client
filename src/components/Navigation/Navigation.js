@@ -38,11 +38,9 @@ class Navigation extends Component {
     }
 
     displayChats(e){
-        console.log('displaying chats...', this.app.userId);
     }
 
     displaySettings(e){
-        console.log('displaying settings...');
     }
 
     view(){

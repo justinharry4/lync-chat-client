@@ -250,7 +250,6 @@ class View {
         let $componentWithSvg = await this.renderSvg(lfAttrViewStr);
         let $lightComponent = this.addEventListeners($componentWithSvg, cmp.ctx);
 
-        // console.log(cmp);
         this.addComponentToTree(cmp, parent);
 
         let $fullComponent = await this.renderSubComponents($lightComponent, cmp);

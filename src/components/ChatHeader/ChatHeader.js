@@ -30,7 +30,6 @@ class ChatHeader extends Component {
     }
 
     displayOptions(e){
-        console.log('displaying options');
     }
 
     view(){

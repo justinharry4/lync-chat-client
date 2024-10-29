@@ -52,8 +52,6 @@ class WebSocketClient {
     }
     
     handleMessage = (event) => {
-        console.log('socket message recieved');
-        
         let rawData = new Uint8Array(event.data);
         let parser = new FrameParser(rawData);
         let message = parser.parse();
@@ -124,9 +122,6 @@ class ChatInterface {
         };
 
         let frame = new TextFrame(key, clientStatus.TEXT_DATA, data);
-
-        // let dec = new TextDecoder('utf-8');
-        // console.log(frame.data, dec.decode(frame.data));
 
         this.client.ws.send(frame.data);
 

@@ -9,8 +9,6 @@ class MessageHandlerSet extends HandlerSet {
     handleTextData = messageHandler(
         [serverStatus.TEXT_DATA],
         (key, statusCode, messageBody) => {
-            console.log('text message recieved');
-
             let $chatbox = $('#chatbox');
             let $messageSection = $('#msg-section');
 
@@ -58,8 +56,6 @@ class MessageHandlerSet extends HandlerSet {
     handleMessageStatusData = messageHandler(
         [serverStatus.MESSAGE_STATUS],
         (key, statusCode, messageBody) => {
-            console.log('delivery status received');
-
             let $chatbox = $('#chatbox');
 
             let event = $.Event('le-status');
@@ -82,8 +78,6 @@ class AckHandlerSet extends HandlerSet {
     ackTextSend = ackHandler(
     [clientStatus.TEXT_DATA],
     (key, statusCode, messageBody) => {
-        console.log('acknowledgement recieved text');
-        
         let chat = this.interface;
         let entry = chat.registry.get(key);
         let messageId = messageBody['message_id'];

@@ -35,7 +35,6 @@ class MessageSection extends Component {
 
     submitSearch(e){
         e.preventDefault();
-        console.log('search submitted!');
     }
 
     async postRender(){
@@ -233,8 +232,6 @@ class MessageSection extends Component {
                     cmp.ctx.chatType == chatType &&
                     cmp.ctx.unreadCount > 0)
                 {
-                    console.log('banner found');
-
                     cmp.setReadState();
                 }
             }

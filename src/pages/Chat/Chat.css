@@ -11,3 +11,7 @@
 #side-nav {
     flex: 0 0 min-content;
 }
+
+#chatbox {
+    flex: 1 0 auto;
+}
