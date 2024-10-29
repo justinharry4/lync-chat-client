@@ -43,7 +43,7 @@ The application can then be accessed in a browser at <http://localhost:1234/>
 
 
 ## Usage
-Open a web browser and visit <http://localhost:1234/chat/login/>.
+Open a web browser and visit <http://localhost:1234/login/>.
 
 Login with any of the credentials:
 
@@ -60,6 +60,7 @@ Log in with the other user's credentials in a different browser window and open
 the chatbox as before to see the messages appear in real-time.
 
 [![Login page screenshot](https://github.com/justinharry4/lync-chat-client/blob/main/public/images/raster/login_screenshot.png?raw=true)](https://github.com/justinharry4/lync-chat-client/blob/main/public/images/raster/login_screenshot.png)
+
 
 [![Chat page screenshot](https://github.com/justinharry4/lync-chat-client/blob/main/public/images/raster/chat_screenshot.png?raw=true)](https://github.com/justinharry4/lync-chat-client/blob/main/public/images/raster/chat_screenshot.png)
 
